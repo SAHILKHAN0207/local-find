@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dukaan Register Karo — LocalFind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Hind:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #faf7f0;
+    --saffron: #f97316;
+    --saffron-light: #fed7aa;
+    --saffron-dark: #c2410c;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --muted: #78716c;
+    --border: #e7e0d0;
+    --card: #ffffff;
+    --radius: 16px;
+    --error: #dc2626;
+    --error-bg: #fef2f2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Hind', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--paper);
+  }
+
+  .logo {
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    font-size: 24px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .logo-dot { color: var(--saffron); }
+
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--ink); }
+
+  /* LAYOUT */
+  .page-wrap {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    min-height: calc(100vh - 65px);
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    background: var(--ink);
+    color: white;
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .left-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(249,115,22,0.2);
+    color: #fb923c;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    width: fit-content;
+  }
+
+  .left-panel h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .left-panel h2 span { color: var(--saffron); }
+
+  .left-panel p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .benefit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    flex: 1;
+  }
+
+  .benefit-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .benefit-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(249,115,22,0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .benefit-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 2px;
+  }
+
+  .benefit-text span {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+  }
+
+  .left-bottom {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .left-bottom strong { color: rgba(255,255,255,0.7); }
+
+  /* FORM PANEL */
+  .form-panel {
+    padding: 48px 60px;
+    overflow-y: auto;
+  }
+
+  .form-header {
+    margin-bottom: 36px;
+  }
+
+  .form-header h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .form-header p {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* STEP INDICATOR */
+  .steps-indicator {
+    display: flex;
+    gap: 0;
+    margin-bottom: 40px;
+    background: var(--border);
+    border-radius: 50px;
+    padding: 4px;
+  }
+
+  .step-pill {
+    flex: 1;
+    padding: 8px;
+    text-align: center;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .step-pill.active {
+    background: var(--saffron);
+    color: white;
+  }
+
+  .step-pill.done {
+    background: var(--green);
+    color: white;
+  }
+
+  /* FORM */
+  .form-section {
+    display: none;
+  }
+  .form-section.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-section-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .form-section-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 7px;
+  }
+
+  label .req { color: var(--saffron); }
+  label .hint { color: var(--muted); font-weight: 400; margin-left: 6px; }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Hind', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--saffron);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
+  }
+
+  input.error { border-color: var(--error); }
+
+  .error-msg {
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 5px;
+    display: none;
+  }
+
+  .field.has-error .error-msg { display: block; }
+  .field.has-error input { border-color: var(--error); }
+
+  textarea { resize: vertical; min-height: 90px; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* WhatsApp number special */
+  .wa-field-wrap {
+    position: relative;
+  }
+
+  .wa-prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+  }
+
+  .wa-field-wrap input {
+    padding-left: 56px;
+  }
+
+  /* Backup number toggle */
+  .backup-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .toggle-switch {
+    width: 40px;
+    height: 22px;
+    background: var(--border);
+    border-radius: 11px;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .toggle-switch.on {
+    background: var(--saffron);
+  }
+
+  .toggle-switch.on::after {
+    transform: translateX(18px);
+  }
+
+  .toggle-label {
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .backup-note {
+    background: rgba(249,115,22,0.06);
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--saffron-dark);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .backup-field { display: none; }
+  .backup-field.show { display: block; }
+
+  /* Categories */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .cat-chip {
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    color: var(--muted);
+    background: white;
+  }
+
+  .cat-chip:hover { border-color: var(--saffron); color: var(--saffron); }
+  .cat-chip.selected {
+    background: var(--saffron);
+    border-color: var(--saffron);
+    color: white;
+    font-weight: 600;
+  }
+
+  /* Buttons */
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    align-items: center;
+  }
+
+  .btn {
+    padding: 13px 28px;
+    border-radius: 50px;
+    border: none;
+    font-family: 'Hind', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--saffron);
+    color: white;
+    flex: 1;
+    box-shadow: 0 4px 14px rgba(249,115,22,0.3);
+  }
+
+  .btn-primary:hover {
+    background: var(--saffron-dark);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+  }
+
+  .btn-secondary:hover { border-color: var(--muted); color: var(--ink); }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .success-screen.show { display: block; }
+
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--green-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 24px;
+  }
+
+  .success-screen h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+
+  .success-screen p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 380px;
+    margin: 0 auto 32px;
+  }
+
+  .success-detail {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto 28px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .success-detail strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .page-wrap { grid-template-columns: 1fr; }
+    .left-panel { padding: 32px 20px; }
+    .form-panel { padding: 32px 20px; }
+    .field-row { grid-template-columns: 1fr; }
+    .category-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Local<span class="logo-dot">Find</span></a>
+  <a href="index.html" class="back-link">← Go Back</a>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="left-badge">🏪 Shop Owner</div>
+
+    <h2>Register Your<br><span>Shop</span></h2>
+    <p>Register on LocalFind and receive requests from nearby customers directly on WhatsApp. It's free, forever.</p>
+
+    <div class="benefit-list">
+      <div class="benefit-item">
+        <div class="benefit-icon">📍</div>
+        <div class="benefit-text">
+          <strong>Location-based Requests</strong>
+          <span>Only requests from customers near your shop</span>
+        </div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">📱</div>
+        <div class="benefit-text">
+          <strong>2 WhatsApp Numbers</strong>
+          <span>Primary and backup — reply from both. Bot will notify the other instantly</span>
+        </div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">⚡</div>
+        <div class="benefit-text">
+          <strong>Real-time Notifications</strong>
+          <span>Instant WhatsApp notification when customer sends a request</span>
+        </div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">🔒</div>
+        <div class="benefit-text">
+          <strong>Private Pricing</strong>
+          <span>The price you quote is visible only to that customer — not competitors</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="left-bottom">
+      <strong>100% Free</strong> — No subscription, no hidden charges
+    </div>
+  </div>
+
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+
+    <!-- SUCCESS SCREEN -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">✅</div>
+      <h3>Shop Registered Successfully!</h3>
+      <p>Congratulations! Your shop is now registered on LocalFind. Nearby customer requests will come directly to WhatsApp.</p>
+
+      <div class="success-detail">
+        <strong>What to expect:</strong><br>
+        - When customers nearby search for items<br>
+        - Notifications on both your WhatsApp numbers<br>
+        - First reply gets the order<br>
+        - Bot automatically informs the other number
+      </div>
+
+      <a href="index.html" class="btn btn-primary" style="text-decoration:none;display:inline-block;">🏠 Go to Home</a>
+    </div>
+
+    <!-- FORM -->
+    <div id="formWrap">
+      <div class="form-header">
+        <h3>Fill Shop Details</h3>
+        <p>Complete registration in 3 simple steps</p>
+      </div>
+
+      <!-- Steps -->
+      <div class="steps-indicator">
+        <div class="step-pill active" id="pill1">1. Shop Info</div>
+        <div class="step-pill" id="pill2">2. Location</div>
+        <div class="step-pill" id="pill3">3. WhatsApp</div>
+      </div>
+
+      <!-- STEP 1: Basic Info -->
+      <div class="form-section active" id="step1">
+        <div class="form-section-title">Basic Shop Information</div>
+        <div class="form-section-sub">Some basic details about your shop</div>
+
+        <div class="field" id="field-shopname">
+          <label>Shop Name <span class="req">*</span></label>
+          <input type="text" id="shopname" placeholder="Like: Sharma Electronics, Gupta Kirana Store">
+          <div class="error-msg">Shop name is required</div>
+        </div>
+
+        <div class="field" id="field-owner">
+          <label>Owner Name <span class="req">*</span></label>
+          <input type="text" id="owner" placeholder="Enter your name">
+          <div class="error-msg">Owner name is required</div>
+        </div>
+
+        <div class="field">
+          <label>Shop Category <span class="req">*</span></label>
+          <div class="category-grid" id="categoryGrid">
+            <div class="cat-chip" onclick="selectCat(this, 'electronics')">📱 Electronics</div>
+            <div class="cat-chip" onclick="selectCat(this, 'kirana')">🛒 Kirana</div>
+            <div class="cat-chip" onclick="selectCat(this, 'kapde')">👕 Clothing</div>
+            <div class="cat-chip" onclick="selectCat(this, 'dawai')">💊 Pharmacy</div>
+            <div class="cat-chip" onclick="selectCat(this, 'jewellery')">💍 Jewellery</div>
+            <div class="cat-chip" onclick="selectCat(this, 'furniture')">🪑 Furniture</div>
+            <div class="cat-chip" onclick="selectCat(this, 'hardware')">🔧 Hardware</div>
+            <div class="cat-chip" onclick="selectCat(this, 'food')">🍱 Food</div>
+            <div class="cat-chip" onclick="selectCat(this, 'other')">🏪 Others</div>
+          </div>
+          <div class="error-msg" id="cat-error" style="display:none;color:var(--error);font-size:12px;margin-top:8px;">Please select a category</div>
+        </div>
+
+        <div class="field">
+          <label>Shop Description <span class="hint">(Optional)</span></label>
+          <textarea id="description" placeholder="Like: We stock a wide range of mobile phones, accessories and electronics..."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="goStep(2)">Next Step →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Location -->
+      <div class="form-section" id="step2">
+        <div class="form-section-title">Shop Location</div>
+        <div class="form-section-sub">Customers will find your shop from here</div>
+
+        <div class="field" id="field-address">
+          <label>Full Address <span class="req">*</span></label>
+          <textarea id="address" placeholder="Shop number, street, locality..." style="min-height:80px;"></textarea>
+          <div class="error-msg">Address is required</div>
+        </div>
+
+        <div class="field-row">
+          <div class="field" id="field-area">
+            <label>Area / Locality <span class="req">*</span></label>
+            <input type="text" id="area" placeholder="Like: Malviya Nagar, C-Scheme">
+            <div class="error-msg">Area is required</div>
+          </div>
+          <div class="field" id="field-pincode">
+            <label>Pincode <span class="req">*</span></label>
+            <input type="text" id="pincode" placeholder="302001" maxlength="6">
+            <div class="error-msg">Pincode is required</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>City <span class="req">*</span></label>
+          <select id="city">
+            <option value="jaipur">Jaipur</option>
+            <option value="jodhpur">Jodhpur</option>
+            <option value="udaipur">Udaipur</option>
+            <option value="kota">Kota</option>
+            <option value="ajmer">Ajmer</option>
+            <option value="other">Other City</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Opening Time</label>
+            <input type="text" id="open-time" placeholder="Like: 9:00 AM">
+          </div>
+          <div class="field">
+            <label>Closing Time</label>
+            <input type="text" id="close-time" placeholder="Like: 9:00 PM">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="goStep(1)">← Previous</button>
+          <button class="btn btn-primary" onclick="goStep(3)">Next Step →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: WhatsApp -->
+      <div class="form-section" id="step3">
+        <div class="form-section-title">WhatsApp Numbers</div>
+        <div class="form-section-sub">Requests will come here — add up to 2 numbers</div>
+
+        <div class="field" id="field-wa1">
+          <label>Primary WhatsApp Number <span class="req">*</span></label>
+          <div class="wa-field-wrap">
+            <div class="wa-prefix">📱 +91</div>
+            <input type="tel" id="wa1" placeholder="98XXXXXXXX" maxlength="10">
+          </div>
+          <div class="error-msg">WhatsApp number required (10 digits)</div>
+        </div>
+
+        <!-- Backup toggle -->
+        <div class="backup-toggle" onclick="toggleBackup()">
+          <div class="toggle-switch" id="backupToggle"></div>
+          <div class="toggle-label">Want to add backup number too?</div>
+        </div>
+
+        <div class="backup-note">
+          💡 If primary number replies, bot automatically sends message to backup: <em>"Order reply sent"</em> — prevents duplicate replies.
+        </div>
+
+        <div class="backup-field" id="backupField">
+          <div class="field" id="field-wa2">
+            <label>Backup WhatsApp Number</label>
+            <div class="wa-field-wrap">
+              <div class="wa-prefix">📱 +91</div>
+              <input type="tel" id="wa2" placeholder="98XXXXXXXX" maxlength="10">
+            </div>
+            <div class="error-msg">10 digit number required</div>
+          </div>
+        </div>
+
+        <div class="field" id="field-email">
+          <label>Email <span class="hint">(Optional — for login)</span></label>
+          <input type="email" id="email" placeholder="shop@example.com">
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="goStep(2)">← Previous</button>
+          <button class="btn btn-primary" onclick="submitForm()">✓ Register Shop</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let selectedCat = '';
+  let backupOn = false;
+  let currentStep = 1;
+
+  function selectCat(el, cat) {
+    document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedCat = cat;
+    document.getElementById('cat-error').style.display = 'none';
+  }
+
+  function toggleBackup() {
+    backupOn = !backupOn;
+    document.getElementById('backupToggle').classList.toggle('on', backupOn);
+    document.getElementById('backupField').classList.toggle('show', backupOn);
+  }
+
+  function setPill(step) {
+    for (let i = 1; i <= 3; i++) {
+      const p = document.getElementById('pill' + i);
+      p.className = 'step-pill';
+      if (i < step) p.classList.add('done');
+      else if (i === step) p.classList.add('active');
+    }
+  }
+
+  function goStep(n) {
+    if (n > currentStep) {
+      if (!validateStep(currentStep)) return;
+    }
+    document.getElementById('step' + currentStep).classList.remove('active');
+    currentStep = n;
+    document.getElementById('step' + n).classList.add('active');
+    setPill(n);
+    window.scrollTo(0, 0);
+  }
+
+  function validateStep(step) {
+    let ok = true;
+
+    if (step === 1) {
+      const shopname = document.getElementById('shopname').value.trim();
+      const owner = document.getElementById('owner').value.trim();
+
+      setError('field-shopname', !shopname);
+      setError('field-owner', !owner);
+      if (!selectedCat) {
+        document.getElementById('cat-error').style.display = 'block';
+        ok = false;
+      }
+      if (!shopname || !owner) ok = false;
+    }
+
+    if (step === 2) {
+      const address = document.getElementById('address').value.trim();
+      const area = document.getElementById('area').value.trim();
+      const pincode = document.getElementById('pincode').value.trim();
+
+      setError('field-address', !address);
+      setError('field-area', !area);
+      setError('field-pincode', !pincode || pincode.length !== 6);
+      if (!address || !area || !pincode || pincode.length !== 6) ok = false;
+    }
+
+    if (step === 3) {
+      const wa1 = document.getElementById('wa1').value.trim();
+      const wa2 = document.getElementById('wa2').value.trim();
+
+      const wa1ok = wa1.length === 10 && /^\d+$/.test(wa1);
+      setError('field-wa1', !wa1ok);
+      if (!wa1ok) ok = false;
+
+      if (backupOn && wa2) {
+        const wa2ok = wa2.length === 10 && /^\d+$/.test(wa2);
+        setError('field-wa2', !wa2ok);
+        if (!wa2ok) ok = false;
+      }
+    }
+
+    return ok;
+  }
+
+  function setError(fieldId, hasError) {
+    const f = document.getElementById(fieldId);
+    if (!f) return;
+    f.classList.toggle('has-error', hasError);
+  }
+
+  function submitForm() {
+    if (!validateStep(3)) return;
+
+    const btn = event.target;
+    btn.textContent = 'Register ho raha hai...';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      document.getElementById('formWrap').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
+    }, 1500);
+  }
+
+  // Only numeric input for phone fields
+  document.getElementById('wa1').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '');
+  });
+  document.getElementById('wa2').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '');
+  });
+  document.getElementById('pincode').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '');
+  });
+</script>
+
+</body>
+</html>

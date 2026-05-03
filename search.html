@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item Dhundho — LocalFind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Hind:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #faf7f0;
+    --saffron: #f97316;
+    --saffron-light: #fed7aa;
+    --saffron-dark: #c2410c;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --muted: #78716c;
+    --border: #e7e0d0;
+    --card: #ffffff;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Hind', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    font-size: 24px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .logo-dot { color: var(--saffron); }
+
+  .back-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .back-link:hover { color: var(--ink); }
+
+  /* SEARCH HERO */
+  .search-hero {
+    background: var(--ink);
+    color: white;
+    padding: 48px 40px 56px;
+    text-align: center;
+  }
+
+  .search-hero h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .search-hero h1 span { color: var(--saffron); }
+
+  .search-hero p {
+    color: rgba(255,255,255,0.5);
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
+
+  .search-box {
+    max-width: 640px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 6px 6px 6px 20px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  .search-icon { font-size: 18px; flex-shrink: 0; }
+
+  .search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Hind', sans-serif;
+    font-size: 16px;
+    color: var(--ink);
+    background: transparent;
+  }
+
+  .search-box input::placeholder { color: var(--muted); }
+
+  .search-btn {
+    background: var(--saffron);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 13px 28px;
+    font-family: 'Hind', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .search-btn:hover { background: var(--saffron-dark); }
+
+  /* LOCATION BAR */
+  .location-bar {
+    max-width: 640px;
+    margin: 16px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .location-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .location-chip:hover { background: rgba(255,255,255,0.18); }
+
+  .radius-btns {
+    display: flex;
+    gap: 6px;
+  }
+
+  .r-btn {
+    padding: 6px 12px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Hind', sans-serif;
+  }
+
+  .r-btn.active, .r-btn:hover {
+    background: var(--saffron);
+    border-color: var(--saffron);
+    color: white;
+  }
+
+  /* CATEGORIES */
+  .categories-bar {
+    padding: 20px 40px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--paper);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .categories-bar::-webkit-scrollbar { display: none; }
+
+  .cat-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    background: white;
+    font-family: 'Hind', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    color: var(--muted);
+  }
+
+  .cat-btn:hover, .cat-btn.active {
+    border-color: var(--saffron);
+    color: var(--saffron);
+    background: #fff7ed;
+  }
+
+  /* MAIN CONTENT */
+  .content-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 40px;
+  }
+
+  /* INITIAL STATE */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .empty-icon { font-size: 56px; margin-bottom: 20px; }
+
+  .empty-state h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  .empty-state p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* LOADING */
+  .loading-state {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .loading-state.show { display: block; }
+
+  .loading-pulse {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .pulse-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--saffron);
+    border-radius: 50%;
+    animation: pulseDot 1.2s ease-in-out infinite;
+  }
+
+  .pulse-dot:nth-child(2) { animation-delay: 0.2s; }
+  .pulse-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulseDot {
+    0%, 100% { transform: scale(0.6); opacity: 0.4; }
+    50% { transform: scale(1); opacity: 1; }
+  }
+
+  .loading-state h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .loading-state p { color: var(--muted); font-size: 14px; }
+
+  /* RESULTS */
+  .results-state { display: none; }
+  .results-state.show { display: block; }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .results-count {
+    font-family: 'Baloo 2', cursive;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .results-count span { color: var(--saffron); }
+
+  .sort-select {
+    padding: 8px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    font-family: 'Hind', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: white;
+    outline: none;
+    cursor: pointer;
+  }
+
+  /* SHOP CARDS */
+  .shops-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .shop-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: start;
+    transition: all 0.3s;
+    animation: slideInCard 0.4s ease both;
+  }
+
+  @keyframes slideInCard {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .shop-card:hover {
+    border-color: var(--saffron);
+    box-shadow: 0 8px 32px rgba(249,115,22,0.1);
+    transform: translateY(-2px);
+  }
+
+  .shop-card:nth-child(1) { animation-delay: 0.05s; }
+  .shop-card:nth-child(2) { animation-delay: 0.1s; }
+  .shop-card:nth-child(3) { animation-delay: 0.15s; }
+
+  
+
+  .shop-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .shop-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--saffron-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .shop-name {
+    font-family: 'Baloo 2', cursive;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .shop-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .stars { color: #f59e0b; }
+
+  .available-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .badge-available {
+    background: var(--green-light);
+    color: var(--green);
+  }
+
+  .badge-checking {
+    background: #fef9c3;
+    color: #854d0e;
+  }
+
+  /* PRICE (blurred until order) */
+  .shop-right {
+    text-align: right;
+    min-width: 160px;
+  }
+
+  .price-wrap {
+    margin-bottom: 14px;
+  }
+
+  .price-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  .price-value {
+    font-family: 'Baloo 2', cursive;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--ink);
+    filter: blur(6px);
+    user-select: none;
+    transition: filter 0.4s;
+  }
+
+  .price-value.revealed { filter: none; }
+
+  .price-hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .order-btn {
+    background: #128c7e;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 11px 20px;
+    font-family: 'Hind', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .order-btn:hover {
+    background: #0f7568;
+    transform: translateY(-1px);
+  }
+
+  .order-btn.checking {
+    background: var(--border);
+    color: var(--muted);
+    cursor: default;
+  }
+
+  /* TAG CHIPS on card */
+  .shop-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .tag-chip {
+    padding: 4px 12px;
+    background: #f5f5f0;
+    border-radius: 50px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ORDER MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,18,8,0.6);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 24px;
+    padding: 36px;
+    max-width: 440px;
+    width: 90%;
+    animation: modalIn 0.3s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .modal-header h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #f5f5f0;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-shop-info {
+    background: #f9f6f0;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .modal-shop-name {
+    font-family: 'Baloo 2', cursive;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .modal-shop-meta { font-size: 13px; color: var(--muted); }
+
+  .price-reveal-box {
+    background: var(--green-light);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .price-reveal-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .price-reveal-value {
+    font-family: 'Baloo 2', cursive;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .modal-note {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .wa-order-btn {
+    width: 100%;
+    background: #128c7e;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    font-family: 'Hind', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .wa-order-btn:hover { background: #0f7568; }
+
+  .modal-cancel {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+    font-family: 'Hind', sans-serif;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .modal-cancel:hover { border-color: var(--muted); color: var(--ink); }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .search-hero { padding: 32px 20px 48px; }
+    .search-hero h1 { font-size: 26px; }
+    .categories-bar { padding: 16px 20px; }
+    .content-wrap { padding: 24px 20px; }
+    .shop-card { grid-template-columns: 1fr; }
+    .shop-right { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Local<span class="logo-dot">Find</span></a>
+  <a href="index.html" class="back-link">← Home</a>
+</nav>
+
+<!-- SEARCH HERO -->
+<div class="search-hero">
+  <h1>What Do You <span>Need?</span></h1>
+  <p>Nearby shops will respond instantly — what's available and the price</p>
+
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Sony headphones, Samsung mobile, saree, medicine..." />
+    <button class="search-btn" onclick="doSearch()">Search →</button>
+  </div>
+
+  <div class="location-bar">
+    <div class="location-chip">📍 Jaipur, Rajasthan ▾</div>
+    <div class="radius-btns">
+      <button class="r-btn" onclick="setRadius(this, 2)">2 km</button>
+      <button class="r-btn active" onclick="setRadius(this, 5)">5 km</button>
+      <button class="r-btn" onclick="setRadius(this, 10)">10 km</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories-bar">
+  <button class="cat-btn active" onclick="filterCat(this,'all')">🏪 All</button>
+  <button class="cat-btn" onclick="filterCat(this,'electronics')">📱 Electronics</button>
+  <button class="cat-btn" onclick="filterCat(this,'kirana')">🛒 Kirana</button>
+  <button class="cat-btn" onclick="filterCat(this,'kapde')">👕 Clothing</button>
+  <button class="cat-btn" onclick="filterCat(this,'dawai')">💊 Pharmacy</button>
+  <button class="cat-btn" onclick="filterCat(this,'jewellery')">💍 Jewellery</button>
+  <button class="cat-btn" onclick="filterCat(this,'furniture')">🪑 Furniture</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content-wrap">
+
+  <!-- Empty state -->
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">🔍</div>
+    <h3>Search Something</h3>
+    <p>Type what you need above.<br>Nearby shops will respond instantly.</p>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-state" id="loadingState">
+    <div class="loading-pulse">
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+      <div class="pulse-dot"></div>
+    </div>
+    <h3>Searching nearby shops...</h3>
+    <p id="loadingMsg">Sending notifications to registered shops within 5km</p>
+  </div>
+
+  <!-- Results -->
+  <div class="results-state" id="resultsState">
+    <div class="results-header">
+      <div class="results-count" id="resultsCount">
+        <span>3</span> shops responded
+      </div>
+      <select class="sort-select" onchange="sortResults(this.value)">
+        <option value="distance">Sort by Distance</option>
+        <option value="price">Sort by Price</option>
+        <option value="rating">Sort by Rating</option>
+      </select>
+    </div>
+    <div class="shops-grid" id="shopsGrid"></div>
+  </div>
+
+</div>
+
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Confirm Order</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-shop-info">
+      <div class="modal-shop-name" id="modalShopName">Sharma Electronics</div>
+      <div class="modal-shop-meta" id="modalShopMeta">📍 0.4 km • ⭐ 4.8</div>
+    </div>
+
+    <div class="price-reveal-box">
+      <div class="price-reveal-label">✓ Your Price</div>
+      <div class="price-reveal-value" id="modalPrice">₹28,500</div>
+    </div>
+
+    <p class="modal-note">
+      After sending order on WhatsApp, shop will confirm item availability. Then you can visit or arrange delivery.
+    </p>
+
+    <button class="wa-order-btn" onclick="sendWAOrder()">
+      💬 Send Order on WhatsApp
+    </button>
+    <button class="modal-cancel" onclick="closeModal()">Not now</button>
+  </div>
+</div>
+
+<script>
+  const sampleShops = [
+    {
+      id: 1,
+      name: 'Sharma Electronics',
+      avatar: '📱',
+      dist: 0.4,
+      rating: 4.8,
+      reviews: 342,
+      status: 'available',
+      price: '₹28,500',
+      tags: ['Warranty available', 'Home delivery', 'EMI'],
+      wa: '919XXXXXXXXX',
+    },
+    {
+      id: 2,
+      name: 'City Sound Store',
+      avatar: '🎧',
+      dist: 1.2,
+      rating: 4.5,
+      reviews: 187,
+      status: 'available',
+      price: '₹27,800',
+      tags: ['Exchange offer', 'Free demo'],
+      wa: '919XXXXXXXXX',
+    },
+    {
+      id: 3,
+      name: 'Rajput Audio World',
+      avatar: '🔊',
+      dist: 2.1,
+      rating: 4.3,
+      reviews: 94,
+      status: 'checking',
+      price: '₹29,200',
+      tags: ['Pan India delivery'],
+      wa: '919XXXXXXXXX',
+    },
+  ];
+
+  let currentShops = [...sampleShops];
+  let selectedShop = null;
+  let searchQuery = '';
+
+  function doSearch() {
+    searchQuery = document.getElementById('searchInput').value.trim();
+    if (!searchQuery) return;
+
+    showLoading();
+
+    const msgs = [
+      `"${searchQuery}" ke liye 5km ke andar dukaans dhundh raha hoon`,
+      '8 registered shops ko WhatsApp notification bheja...',
+      '3 shops ne respond kiya!'
+    ];
+
+    let i = 0;
+    document.getElementById('loadingMsg').textContent = msgs[0];
+    const timer = setInterval(() => {
+      i++;
+      if (i < msgs.length) {
+        document.getElementById('loadingMsg').textContent = msgs[i];
+      } else {
+        clearInterval(timer);
+        showResults();
+      }
+    }, 1200);
+  }
+
+  function showLoading() {
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('resultsState').classList.remove('show');
+    document.getElementById('loadingState').classList.add('show');
+  }
+
+  function showResults() {
+    document.getElementById('loadingState').classList.remove('show');
+    document.getElementById('resultsState').classList.add('show');
+    renderShops(currentShops);
+  }
+
+  function renderShops(shops) {
+    document.getElementById('resultsCount').innerHTML = `<span>${shops.filter(s=>s.status==='available').length}</span> shops ne respond kiya`;
+    const grid = document.getElementById('shopsGrid');
+    grid.innerHTML = '';
+    shops.forEach((shop, idx) => {
+      grid.innerHTML += shopCardHTML(shop, idx);
+    });
+  }
+
+  function shopCardHTML(s, idx) {
+    const delay = idx * 0.06;
+    const isAvail = s.status === 'available';
+
+    return `
+    <div class="shop-card" style="animation-delay:${delay}s">
+      <div class="shop-main">
+        <div class="shop-top">
+          <div class="shop-avatar">${s.avatar}</div>
+          <div>
+            <div class="shop-name">${s.name}</div>
+            <div class="shop-meta">
+              <span class="meta-chip">📍 ${s.dist} km</span>
+              <span class="meta-chip"><span class="stars">★</span> ${s.rating}</span>
+              <span class="meta-chip">${s.reviews} reviews</span>
+              <span class="available-badge ${isAvail ? 'badge-available' : 'badge-checking'}">
+                ${isAvail ? '✓ Available' : '⏳ Checking...'}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="shop-tags">
+          ${s.tags.map(t => `<span class="tag-chip">${t}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="shop-right">
+        ${isAvail ? `
+        <div class="price-wrap">
+          <div class="price-label">Price</div>
+          <div class="price-value" id="price-${s.id}">${s.price}</div>
+          <div class="price-hint">Order karne par dikhega</div>
+        </div>
+        <button class="order-btn" onclick="openModal(${s.id})">
+          💬 Order Karo
+        </button>` : `
+        <div class="price-wrap">
+          <div class="price-label">Status</div>
+          <div style="font-size:14px;color:var(--muted);margin-top:6px;">Jabab aa raha hai...</div>
+        </div>
+        <button class="order-btn checking" disabled>⏳ Wait Karo</button>`}
+      </div>
+    </div>`;
+  }
+
+  function openModal(id) {
+    selectedShop = sampleShops.find(s => s.id === id);
+    document.getElementById('modalShopName').textContent = selectedShop.name;
+    document.getElementById('modalShopMeta').textContent = `📍 ${selectedShop.dist} km • ⭐ ${selectedShop.rating}`;
+    document.getElementById('modalPrice').textContent = selectedShop.price;
+
+    // Reveal price on card too
+    const priceEl = document.getElementById('price-' + id);
+    if (priceEl) priceEl.classList.add('revealed');
+
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+
+  function closeModal(e) {
+    if (!e || e.target === document.getElementById('modalOverlay')) {
+      document.getElementById('modalOverlay').classList.remove('show');
+    }
+  }
+
+  function sendWAOrder() {
+    if (!selectedShop) return;
+    const msg = encodeURIComponent(
+      `Namaste! Main LocalFind se aa raha hoon.\n\nMujhe chahiye: ${searchQuery || 'Item'}\nPrice jo tumne quote kiya: ${selectedShop.price}\n\nKya yeh available hai? Main aane wala hoon.`
+    );
+    window.open(`https://wa.me/${selectedShop.wa}?text=${msg}`, '_blank');
+    closeModal();
+  }
+
+  function setRadius(btn, r) {
+    document.querySelectorAll('.r-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function filterCat(btn, cat) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function sortResults(by) {
+    const sorted = [...currentShops].sort((a, b) => {
+      if (by === 'distance') return a.dist - b.dist;
+      if (by === 'price') return parseInt(a.price.replace(/\D/g,'')) - parseInt(b.price.replace(/\D/g,''));
+      if (by === 'rating') return b.rating - a.rating;
+    });
+    renderShops(sorted);
+  }
+
+  // Enter key search
+  document.getElementById('searchInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+</script>
+
+</body>
+</html>

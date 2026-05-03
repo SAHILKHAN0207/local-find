@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocalFind — Apni Dukaan, Apna Shehar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Hind:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="/shop-register.html">
+<link href="/search.html">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #faf7f0;
+    --saffron: #f97316;
+    --saffron-light: #fed7aa;
+    --saffron-dark: #c2410c;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --muted: #78716c;
+    --border: #e7e0d0;
+    --card: #ffffff;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Hind', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    font-size: 26px;
+    color: var(--ink);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-dot { color: var(--saffron); }
+
+  nav ul {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  nav ul a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover { color: var(--ink); }
+
+  .nav-cta {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 10px 22px;
+    border-radius: 50px;
+    border: none;
+    font-family: 'Hind', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--ink);
+  }
+
+  .btn-outline:hover { border-color: var(--saffron); color: var(--saffron); }
+
+  .btn-primary {
+    background: var(--saffron);
+    color: white;
+    box-shadow: 0 4px 14px rgba(249,115,22,0.35);
+  }
+
+  .btn-primary:hover {
+    background: var(--saffron-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(249,115,22,0.4);
+  }
+
+  .btn-large {
+    padding: 14px 32px;
+    font-size: 16px;
+    border-radius: 50px;
+  }
+
+  /* HERO */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 40px 60px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-light);
+    color: var(--green);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .hero-badge .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+
+  .hero h1 span { color: var(--saffron); }
+
+  .hero p {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    max-width: 460px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1.5px solid var(--border);
+  }
+
+  
+  .stat-num {
+    font-family: 'Baloo 2', cursive;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--saffron);
+  }
+  .stat-label { font-size: 13px; color: var(--muted); }
+
+  /* HERO VISUAL (right side) */
+  .hero-visual {
+    position: relative;
+  }
+
+  .phone-mockup {
+    background: var(--ink);
+    border-radius: 36px;
+    padding: 12px;
+    box-shadow: 0 30px 80px rgba(26,18,8,0.25);
+    max-width: 300px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .phone-screen {
+    background: var(--paper);
+    border-radius: 26px;
+    overflow: hidden;
+    min-height: 500px;
+  }
+
+  .phone-notch {
+    width: 100px;
+    height: 28px;
+    background: var(--ink);
+    border-radius: 0 0 16px 16px;
+    margin: 0 auto 16px;
+  }
+
+  .app-header {
+    background: var(--saffron);
+    color: white;
+    padding: 16px;
+    font-family: 'Baloo 2', cursive;
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .search-bar-mock {
+    margin: 14px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .shop-card-mock {
+    margin: 8px 14px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+    animation: slideIn 0.5s ease both;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .shop-card-mock:nth-child(1) { animation-delay: 0.1s; }
+  .shop-card-mock:nth-child(2) { animation-delay: 0.3s; }
+  .shop-card-mock:nth-child(3) { animation-delay: 0.5s; }
+
+  .mock-shop-name {
+    font-family: 'Baloo 2', cursive;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .mock-shop-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin: 2px 0 8px;
+  }
+
+  .mock-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .mock-badge-green { background: var(--green-light); color: var(--green); }
+  .mock-badge-orange { background: var(--saffron-light); color: var(--saffron-dark); }
+
+  .float-card {
+    position: absolute;
+    background: white;
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    font-size: 13px;
+  }
+
+  .float-card-1 {
+    top: 40px;
+    right: -30px;
+    font-family: 'Baloo 2', cursive;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .float-card-2 {
+    bottom: 60px;
+    left: -40px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* HOW IT WORKS */
+  .section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+
+  .section-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--saffron);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  .section-sub {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 540px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+  }
+
+  /* STEPS */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .step-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .step-card:hover {
+    border-color: var(--saffron);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(249,115,22,0.12);
+  }
+
+  .step-num {
+    font-family: 'Baloo 2', cursive;
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--saffron-light);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .step-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .step-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* FEATURES SECTION */
+  .features-wrap {
+    background: var(--ink);
+    color: white;
+    padding: 80px 0;
+  }
+
+  .features-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .feature-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: all 0.3s;
+  }
+
+  .feature-card:hover {
+    background: rgba(249,115,22,0.1);
+    border-color: rgba(249,115,22,0.4);
+  }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(249,115,22,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .feature-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: white;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .cta-card {
+    border-radius: 24px;
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-card-user {
+    background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+    border: 1.5px solid #fdba74;
+  }
+
+  .cta-card-shop {
+    background: var(--ink);
+    color: white;
+  }
+
+  .cta-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.6;
+  }
+
+  .cta-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .cta-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    opacity: 0.7;
+    margin-bottom: 28px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1.5px solid var(--border);
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 13px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    nav ul { display: none; }
+    .hero { grid-template-columns: 1fr; gap: 40px; padding: 40px 20px; }
+    .hero h1 { font-size: 36px; }
+    .hero-visual { display: none; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .cta-section { grid-template-columns: 1fr; }
+    .section { padding: 60px 20px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">Local<span class="logo-dot">Find</span></a>
+  <ul>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="shop-register.html">Shop Register</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="shop-register.html" class="btn btn-outline">Register Your Shop</a>
+    <a href="search.html" class="btn btn-primary">Start Searching →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      200+ shops registered in Jaipur
+    </div>
+
+    <h1>Find Shops in Your <span>City</span><br>in Seconds</h1>
+
+    <p>Need anything? Send a request — nearby shops will instantly tell you what's available and the price. Order directly on WhatsApp.</p>
+
+    <div class="hero-actions">
+      <a href="search.html" class="btn btn-primary btn-large">Search Item →</a>
+      <a href="shop-register.html" class="btn btn-outline btn-large">🏪 Add your shop</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">200+</div>
+        <div class="stat-label">Registered Shops</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5km</div>
+        <div class="stat-label">Radius Coverage</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2 min</div>
+        <div class="stat-label">Average Reply Time</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="float-card float-card-1">✓ Available!</div>
+
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="app-header">
+          LocalFind
+          <span style="font-size:13px;font-weight:400;opacity:0.8">📍 Jaipur</span>
+        </div>
+        <div class="search-bar-mock">🔍 Search Sony headphones...</div>
+
+        <div style="padding: 4px 14px 8px; font-size:11px; color:var(--muted); font-weight:500;">3 shops responded</div>
+
+        <div class="shop-card-mock">
+          <div class="mock-shop-name">Sharma Electronics</div>
+          <div class="mock-shop-meta">📍 0.4 km • ⭐ 4.8</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="mock-badge mock-badge-green">✓ Available</span>
+            <span style="font-size:12px;font-weight:600;color:var(--ink)">₹28,500</span>
+          </div>
+        </div>
+
+        <div class="shop-card-mock">
+          <div class="mock-shop-name">City Sound Store</div>
+          <div class="mock-shop-meta">📍 1.2 km • ⭐ 4.5</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="mock-badge mock-badge-green">✓ Available</span>
+            <span style="font-size:12px;font-weight:600;color:var(--ink)">₹27,800</span>
+          </div>
+        </div>
+
+        <div class="shop-card-mock">
+          <div class="mock-shop-name">Rajput Audio World</div>
+          <div class="mock-shop-meta">📍 2.1 km • ⭐ 4.3</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="mock-badge mock-badge-orange">Checking...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="float-card float-card-2">
+      🔔 Notification sent to<br>5 nearby shops
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">3 Simple Steps</h2>
+  <p class="section-sub">No app download, no account creation — just search and order on WhatsApp.</p>
+
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-icon">🔍</div>
+      <div class="step-title">Search for anything</div>
+      <div class="step-desc">Search for electronics, clothes, medicine, groceries — just type the name and select your area. That's all you need.</div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-icon">🔔</div>
+      <div class="step-title">Nearby shops respond</div>
+      <div class="step-desc">Instant WhatsApp notifications go to registered shops within 5km. They tell you what's available and the price — just for you.</div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-icon">💬</div>
+      <div class="step-title">Order on WhatsApp</div>
+      <div class="step-desc">Choose your preferred shop — check price, visit or arrange delivery. All via WhatsApp.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<div class="features-wrap">
+  <div class="features-inner" id="features">
+    <div class="section-label" style="color:#fb923c;">What's Special</div>
+    <h2 class="section-title" style="color:white;">Smart Features</h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <div class="feature-title">Location-based Smart Search</div>
+        <div class="feature-desc">Notifications only go to registered shops near you — no random shops. Closer shops appear first.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Private Pricing — Just For You</div>
+        <div class="feature-desc">The price shopkeeper quotes is visible only to you. No one else in the market knows — fair deal guaranteed.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <div class="feature-title">Dual WhatsApp Number Support</div>
+        <div class="feature-desc">Shopkeepers can add 2 numbers. If first number replies, second number automatically gets "Reply sent" message.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Real-time Notifications</div>
+        <div class="feature-desc">Shops respond within 2 minutes of your request. No waiting, no phone calls — everything on WhatsApp.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA CARDS -->
+<div class="cta-section">
+  <div class="cta-card cta-card-user">
+    <div class="cta-label" style="color:var(--saffron-dark);">For Customers</div>
+    <div class="cta-title" style="color:var(--ink);">Need Something?<br>Search Now</div>
+    <p class="cta-desc" style="color:var(--muted);">Search for any item, get instant responses from nearby shops — order on WhatsApp.</p>
+    <a href="search.html" class="btn btn-primary btn-large">Search Now →</a>
+  </div>
+
+  <div class="cta-card cta-card-shop">
+    <div class="cta-label" style="color:rgba(255,255,255,0.5);">For Shopkeepers</div>
+    <div class="cta-title">Register Your Shop</div>
+    <p class="cta-desc">Register for free, get nearby customer requests directly on WhatsApp. Grow your business without any app.</p>
+    <a href="shop-register.html" class="btn btn-primary btn-large">Register Now →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <a href="index.html" class="logo" style="font-size:20px;">Local<span class="logo-dot">Find</span></a>
+  </div>
+  <div>Jaipur, Rajasthan · Your Shop, Your City</div>
+  <div style="display:flex;gap:20px;">
+    <a href="shop-register.html" style="color:var(--muted);text-decoration:none;">Shop Register</a>
+    <a href="search.html" style="color:var(--muted);text-decoration:none;">Search</a>
+  </div>
+</footer>
+
+</body>
+</html>
