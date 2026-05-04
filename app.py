@@ -6,6 +6,9 @@ Run: python3 app.py
 import os
 import sys
 import json
+from routes.shops import shops_bp
+from routes.requests import requests_bp
+from routes.webhook import webhook_bp
 from flask import Flask, jsonify, request
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -31,6 +34,7 @@ def options_handler(path):
 
 app.register_blueprint(shops_bp)
 app.register_blueprint(requests_bp)
+app.register_blueprint(webhook_bp)
 
 @app.route('/api/health', methods=['GET'])
 def health():
