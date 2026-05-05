@@ -1,6 +1,6 @@
 # LocalFind 🏪
 
-> Find your local shop in seconds.
+> Find your local shop in seconds
 
 LocalFind is a hyperlocal shopping platform where users search for any item and nearby registered shops instantly respond on WhatsApp — including price quotes that are shown only to that specific user.
 
@@ -102,7 +102,7 @@ http://localhost:5000
 ### Health Check
 ```
 GET /api/health
-```
+
 
 ---
 
