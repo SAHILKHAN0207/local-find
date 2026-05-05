@@ -17,7 +17,7 @@ LocalFind is a hyperlocal shopping platform where users search for any item and 
 
 ---
 
-## 🗂️ Project Structure
+Project Structure
 
 ```
 localfind/
@@ -54,7 +54,7 @@ git clone https://github.com/your-username/localfind.git
 cd localfind
 ```
 
-### 3. Install Flask
+### 3. Install Flaskk
 ```bash
 pip install flask
 ```
@@ -77,7 +77,7 @@ http://localhost:5000
 
 ---
 
-## 🔌 API Endpoints
+ API Endpoints
 
 ### Shop Endpoints
 | Method | URL | Description |
@@ -145,7 +145,6 @@ Order locked — no duplicate reply possible
 | Distance | Haversine formula |
 | WhatsApp | Twilio / Meta Cloud API (coming soon) |
 
----
 
 ## 🛣️ Roadmap
 
@@ -159,7 +158,7 @@ Order locked — no duplicate reply possible
 - [ ] Rating & review system
 - [ ] SMS fallback
 
----
+
 
 ## 👨‍💻 Developer
 
@@ -167,6 +166,6 @@ Built with ❤️ for local businesses of India 🇮🇳
 
 ---
 
-## 📄 License
+📄 License
 
 MIT License — free to use, modify, and distribute.

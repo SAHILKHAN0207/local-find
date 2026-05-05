@@ -839,17 +839,54 @@
     f.classList.toggle('has-error', hasError);
   }
 
-  function submitForm() {
+  async function submitForm() {
     if (!validateStep(3)) return;
 
     const btn = event.target;
     btn.textContent = 'Register ho raha hai...';
     btn.disabled = true;
 
-    setTimeout(() => {
-      document.getElementById('formWrap').style.display = 'none';
-      document.getElementById('successScreen').classList.add('show');
-    }, 1500);
+    const data = {
+      shop_name:   document.getElementById('shopname').value.trim(),
+      owner_name:  document.getElementById('owner').value.trim(),
+      category:    selectedCat,
+      description: document.getElementById('description').value.trim(),
+      address:     document.getElementById('address').value.trim(),
+      area:        document.getElementById('area').value.trim(),
+      city:        document.getElementById('city').value,
+      pincode:     document.getElementById('pincode').value.trim(),
+      wa_primary:  document.getElementById('wa1').value.trim(),
+      wa_backup:   document.getElementById('wa2').value.trim() || null,
+      email:       document.getElementById('email').value.trim() || null,
+      password:    'localfind123',
+      latitude:    26.9124,
+      longitude:   75.7873,
+    };
+
+    try {
+      const res = await fetch('/api/shops/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (result.ok) {
+        localStorage.setItem('shop_token', result.data.token);
+        localStorage.setItem('shop_id', result.data.shop_id);
+        document.getElementById('formWrap').style.display = 'none';
+        document.getElementById('successScreen').classList.add('show');
+      } else {
+        btn.textContent = '✓ Dukaan Register Karo';
+        btn.disabled = false;
+        alert('Error: ' + (result.error || JSON.stringify(result.details)));
+      }
+    } catch (err) {
+      btn.textContent = '✓ Dukaan Register Karo';
+      btn.disabled = false;
+      alert('Server se connection nahi ho paya!');
+    }
   }
 
   // Only numeric input for phone fields

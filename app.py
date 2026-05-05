@@ -2,7 +2,8 @@
 LocalFind — Main Flask Application
 Run: python3 app.py
 """
-
+import sys
+sys.stdout.reconfigure(line_buffering=True)
 import os
 import sys
 import json
@@ -14,8 +15,8 @@ from flask import Flask, jsonify, request
 sys.path.insert(0, os.path.dirname(__file__))
 
 from db.schema import init_db, get_db
-from routes.shops import shops_bp
-from routes.requests import requests_bp
+
+
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 app.config['JSON_AS_ASCII'] = False
@@ -27,15 +28,16 @@ def add_cors(response):
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     return response
 
-@app.route('/', defaults={'path': ''}, methods=['OPTIONS'])
-@app.route('/<path:path>', methods=['OPTIONS'])
-def options_handler(path):
-    return jsonify({}), 200
+
 
 app.register_blueprint(shops_bp)
 app.register_blueprint(requests_bp)
 app.register_blueprint(webhook_bp)
 
+@app.route('/test', methods=['POST'])
+def test():
+    data = request.form.get('From', 'NO DATA')
+    return f"ok - got: {data}"
 @app.route('/api/health', methods=['GET'])
 def health():
     db = get_db()
