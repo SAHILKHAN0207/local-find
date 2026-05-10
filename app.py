@@ -9,7 +9,6 @@ import sys
 import json
 from routes.shops import shops_bp
 from routes.requests import requests_bp
-from routes.webhook import webhook_bp
 from flask import Flask, jsonify, request
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -30,7 +29,6 @@ def add_cors(response):
 
 app.register_blueprint(shops_bp)
 app.register_blueprint(requests_bp)
-app.register_blueprint(webhook_bp)
 
 @app.route('/test', methods=['POST'])
 def test():
