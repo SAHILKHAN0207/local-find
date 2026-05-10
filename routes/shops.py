@@ -421,7 +421,7 @@ def search_shops():
 
         product_list = [r['product'].lower() for r in all_products]
 
-        # Step 2: Fuzzy match karo — 70% similarity
+        # Step 2: Fuzzy match karo
         matches = process.extractBests(q, product_list, score_cutoff=70, limit=10)
         matched_products = [m[0] for m in matches]
 
@@ -439,19 +439,19 @@ def search_shops():
         placeholders = ','.join('?' * len(cat_list)) if cat_list else None
 
         query = f"""
-            SELECT id, shop_name, category, description, products,
+            SELECT id, shop_name, category, description,
                    address, area, rating, total_reviews, wa_primary
             FROM shops
             WHERE is_active=1 AND city=?
             AND (
                 category LIKE ? OR shop_name LIKE ? OR
-                description LIKE ? OR products LIKE ?
+                description LIKE ?
                 {('OR category IN (' + placeholders + ')') if placeholders else ''}
             )
-            LIMIT 10
+            LIMIT 20
         """
 
-        params = [city, f'%{q}%', f'%{q}%', f'%{q}%', f'%{q}%'] + cat_list
+        params = [city, f'%{q}%', f'%{q}%', f'%{q}%'] + cat_list
         rows = db.execute(query, params).fetchall()
         return success({'shops': [dict(r) for r in rows], 'count': len(rows)})
     finally:

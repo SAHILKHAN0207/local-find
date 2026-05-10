@@ -533,8 +533,7 @@
     searchQuery = document.getElementById('searchInput').value.trim();
     if (!searchQuery) return;
     showLoading();
-
-    let url = `/api/shops/search?q=${encodeURIComponent(searchQuery)}&city=jaipur`;
+   let url = `http://localhost:5000/api/shops/search?q=${encodeURIComponent(searchQuery)}&city=jaipur`;
     if (activeCat !== 'all') url += `&cat=${encodeURIComponent(activeCat)}`;
 
     fetch(url)
