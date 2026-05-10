@@ -34,6 +34,61 @@ app.register_blueprint(requests_bp)
 def test():
     data = request.form.get('From', 'NO DATA')
     return f"ok - got: {data}"
+
+@app.route('/admin')
+def admin_panel():
+    return app.send_static_file('admin.html')
+
+@app.route('/api/admin/shops', methods=['GET'])
+def admin_get_shops():
+    db = get_db()
+    try:
+        shops = db.execute('SELECT * FROM shops ORDER BY created_at DESC').fetchall()
+        return jsonify({'ok': True, 'data': {'shops': [dict(s) for s in shops], 'count': len(shops)}})
+    finally:
+        db.close()
+
+@app.route('/api/admin/shops/<int:shop_id>', methods=['DELETE'])
+def admin_delete_shop(shop_id):
+    db = get_db()
+    try:
+        db.execute('DELETE FROM shops WHERE id=?', (shop_id,))
+        db.commit()
+        return jsonify({'ok': True})
+    finally:
+        db.close()
+
+@app.route('/api/admin/shops/<int:shop_id>/toggle', methods=['POST'])
+def admin_toggle_shop(shop_id):
+    db = get_db()
+    try:
+        shop = db.execute('SELECT is_active FROM shops WHERE id=?', (shop_id,)).fetchone()
+        new_status = 0 if shop['is_active'] else 1
+        db.execute('UPDATE shops SET is_active=? WHERE id=?', (new_status, shop_id))
+        db.commit()
+        return jsonify({'ok': True, 'is_active': new_status})
+    finally:
+        db.close()
+
+@app.route('/api/admin/requests', methods=['GET'])
+def admin_get_requests():
+    db = get_db()
+    try:
+        reqs = db.execute('SELECT * FROM requests ORDER BY created_at DESC').fetchall()
+        return jsonify({'ok': True, 'data': {'requests': [dict(r) for r in reqs], 'count': len(reqs)}})
+    finally:
+        db.close()
+
+@app.route('/api/admin/requests/<int:req_id>', methods=['DELETE'])
+def admin_delete_request(req_id):
+    db = get_db()
+    try:
+        db.execute('DELETE FROM requests WHERE id=?', (req_id,))
+        db.commit()
+        return jsonify({'ok': True})
+    finally:
+        db.close()
+
 @app.route('/api/health', methods=['GET'])
 def health():
     db = get_db()

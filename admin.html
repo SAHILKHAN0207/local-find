@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — LocalFind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #faf7f0;
+    --saffron: #f97316;
+    --saffron-dark: #c2410c;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --blue: #2563eb;
+    --blue-light: #eff6ff;
+    --muted: #78716c;
+    --border: #e7e0d0;
+    --sidebar-w: 240px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Hind', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── LOGIN SCREEN ── */
+  .login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+  }
+
+  .login-card {
+    background: white;
+    border-radius: 24px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  }
+
+  .login-logo {
+    font-family: 'Baloo 2', cursive;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .login-logo span { color: var(--saffron); }
+
+  .login-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 36px;
+  }
+
+  .login-field { margin-bottom: 18px; }
+
+  .login-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .login-field input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Hind', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .login-field input:focus {
+    border-color: var(--saffron);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--saffron);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Hind', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+
+  .login-btn:hover { background: var(--saffron-dark); }
+
+  .login-error {
+    background: var(--red-light);
+    color: var(--red);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-top: 14px;
+    display: none;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .admin-wrap {
+    display: none;
+    min-height: 100vh;
+  }
+
+  .admin-wrap.show {
+    display: flex;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--ink);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 22px;
+    font-weight: 800;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .sidebar-logo span { color: var(--saffron); }
+  .sidebar-logo small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.4);
+    font-family: 'Hind', sans-serif;
+    margin-top: 2px;
+  }
+
+  .sidebar-nav {
+    padding: 20px 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.55);
+    transition: all 0.2s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+  .nav-item.active { background: var(--saffron); color: white; }
+  .nav-icon { font-size: 16px; }
+
+  .sidebar-bottom {
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    transition: all 0.2s;
+    border: none;
+    background: none;
+    width: 100%;
+  }
+
+  .logout-btn:hover { color: var(--red); background: rgba(220,38,38,0.1); }
+
+  /* ── MAIN CONTENT ── */
+  .main-content {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 32px 36px;
+    min-height: 100vh;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .page-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .page-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  /* ── STATS CARDS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .stat-icon.orange { background: #fff7ed; }
+  .stat-icon.green  { background: var(--green-light); }
+  .stat-icon.blue   { background: var(--blue-light); }
+
+  .stat-num {
+    font-family: 'Baloo 2', cursive;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1.5px solid var(--border);
+  }
+
+  .table-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .refresh-btn {
+    padding: 8px 16px;
+    background: var(--paper);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Hind', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--muted);
+  }
+
+  .refresh-btn:hover { border-color: var(--saffron); color: var(--saffron); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    background: var(--paper);
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1.5px solid var(--border);
+  }
+
+  td {
+    padding: 14px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #faf9f7; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-red   { background: var(--red-light); color: var(--red); }
+  .badge-blue  { background: var(--blue-light); color: var(--blue); }
+  .badge-gray  { background: #f5f5f0; color: var(--muted); }
+
+  .action-btns { display: flex; gap: 8px; }
+
+  .btn-toggle {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    font-family: 'Hind', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    color: var(--muted);
+  }
+
+  .btn-toggle:hover { border-color: var(--saffron); color: var(--saffron); }
+
+  .btn-del {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    font-family: 'Hind', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    color: var(--red);
+    border-color: #fecaca;
+  }
+
+  .btn-del:hover { background: var(--red); color: white; border-color: var(--red); }
+
+  .empty-table {
+    text-align: center;
+    padding: 48px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  .loading-row {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* ── CONFIRM MODAL ── */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-bg.show { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+  }
+
+  .modal-icon { font-size: 40px; margin-bottom: 16px; }
+
+  .modal h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .modal p { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+
+  .modal-actions { display: flex; gap: 10px; }
+
+  .modal-cancel {
+    flex: 1;
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    font-family: 'Hind', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+  }
+
+  .modal-confirm {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--red);
+    color: white;
+    font-family: 'Hind', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--ink);
+    color: white;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: var(--green); }
+  .toast.error   { background: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo">Local<span>Find</span></div>
+    <div class="login-sub">Admin Panel — Sirf authorized access</div>
+
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="admin" />
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" />
+    </div>
+    <button class="login-btn" onclick="doLogin()">Login →</button>
+    <div class="login-error" id="loginError">❌ Username ya password galat hai</div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-wrap" id="adminWrap">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      Local<span>Find</span>
+      <small>Admin Panel</small>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showPage('dashboard', this)">
+        <span class="nav-icon">📊</span> Dashboard
+      </button>
+      <button class="nav-item" onclick="showPage('shops', this)">
+        <span class="nav-icon">🏪</span> Shops
+      </button>
+      <button class="nav-item" onclick="showPage('requests', this)">
+        <span class="nav-icon">📦</span> Requests
+      </button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="doLogout()">
+        <span>🚪</span> Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main-content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">LocalFind ka overview</div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon orange">🏪</div>
+          <div>
+            <div class="stat-num" id="statShops">—</div>
+            <div class="stat-label">Active Shops</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">📦</div>
+          <div>
+            <div class="stat-num" id="statReqs">—</div>
+            <div class="stat-label">Open Requests</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">📍</div>
+          <div>
+            <div class="stat-num" id="statTotal">—</div>
+            <div class="stat-label">Total Shops</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title">Recent Shops</div>
+          <button class="refresh-btn" onclick="loadDashboard()">↻ Refresh</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Shop Name</th>
+              <th>Owner</th>
+              <th>City</th>
+              <th>Category</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="dashShopsBody">
+            <tr><td colspan="5" class="loading-row">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SHOPS -->
+    <div class="page" id="page-shops">
+      <div class="page-title">Shops Management</div>
+      <div class="page-sub">Saari registered shops</div>
+
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title" id="shopsCountTitle">Shops</div>
+          <button class="refresh-btn" onclick="loadShops()">↻ Refresh</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Shop</th>
+              <th>Owner</th>
+              <th>City / Area</th>
+              <th>WhatsApp</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="shopsBody">
+            <tr><td colspan="7" class="loading-row">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- REQUESTS -->
+    <div class="page" id="page-requests">
+      <div class="page-title">Requests</div>
+      <div class="page-sub">Customers ki requests</div>
+
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-title" id="reqsCountTitle">Requests</div>
+          <button class="refresh-btn" onclick="loadRequests()">↻ Refresh</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Item</th>
+              <th>City</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reqsBody">
+            <tr><td colspan="7" class="loading-row">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-icon">⚠️</div>
+    <h3 id="modalTitle">Confirm karo</h3>
+    <p id="modalMsg">Kya aap sure hain?</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm" id="modalConfirmBtn">Haan, Delete Karo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Config ────────────────────────────────────────────────
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'localfind@admin';
+  const API = window.location.port === '5500' ? 'http://127.0.0.1:5000' : '';
+
+  // ── Login ─────────────────────────────────────────────────
+  function doLogin() {
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value;
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+      sessionStorage.setItem('admin_ok', '1');
+      document.getElementById('loginWrap').style.display = 'none';
+      document.getElementById('adminWrap').classList.add('show');
+      loadDashboard();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }
+
+  function doLogout() {
+    sessionStorage.removeItem('admin_ok');
+    location.reload();
+  }
+
+  // Check session
+  if (sessionStorage.getItem('admin_ok') === '1') {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminWrap').classList.add('show');
+    loadDashboard();
+  }
+
+  // ── Navigation ────────────────────────────────────────────
+  function showPage(name, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    btn.classList.add('active');
+    if (name === 'dashboard') loadDashboard();
+    if (name === 'shops')     loadShops();
+    if (name === 'requests')  loadRequests();
+  }
+
+  // ── API Calls ─────────────────────────────────────────────
+  async function apiFetch(path) {
+    const res = await fetch(API + path);
+    return res.json();
+  }
+
+  // ── Dashboard ─────────────────────────────────────────────
+  async function loadDashboard() {
+    try {
+      const health = await apiFetch('/api/health');
+      if (health.ok) {
+        document.getElementById('statShops').textContent = health.active_shops;
+        document.getElementById('statReqs').textContent  = health.open_requests;
+      }
+
+      const shops = await apiFetch('/api/admin/shops');
+      document.getElementById('statTotal').textContent = shops.data?.count || '—';
+
+      const tbody = document.getElementById('dashShopsBody');
+      if (!shops.data?.shops?.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-table">Koi shop nahi</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = shops.data.shops.slice(0, 8).map(s => `
+        <tr>
+          <td><strong>${s.shop_name}</strong></td>
+          <td>${s.owner_name}</td>
+          <td>${s.city || '—'}</td>
+          <td>${s.category || '—'}</td>
+          <td><span class="badge ${s.is_active ? 'badge-green' : 'badge-red'}">${s.is_active ? '✓ Active' : '✗ Inactive'}</span></td>
+        </tr>`).join('');
+    } catch(e) {
+      showToast('Server se connect nahi ho paya', 'error');
+    }
+  }
+
+  // ── Shops ─────────────────────────────────────────────────
+  async function loadShops() {
+    const tbody = document.getElementById('shopsBody');
+    tbody.innerHTML = `<tr><td colspan="7" class="loading-row">Loading...</td></tr>`;
+    try {
+      const res = await apiFetch('/api/admin/shops');
+      const shops = res.data?.shops || [];
+      document.getElementById('shopsCountTitle').textContent = `Shops (${shops.length})`;
+
+      if (!shops.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty-table">Koi shop registered nahi</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = shops.map(s => `
+        <tr id="shop-row-${s.id}">
+          <td><span style="color:var(--muted);font-size:12px;">#${s.id}</span></td>
+          <td>
+            <strong>${s.shop_name}</strong>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">${s.description?.slice(0,40) || ''}</div>
+          </td>
+          <td>${s.owner_name}</td>
+          <td>
+            <strong>${s.city || '—'}</strong>
+            <div style="font-size:12px;color:var(--muted);">${s.area || ''}</div>
+          </td>
+          <td style="font-size:13px;">${s.wa_primary || '—'}</td>
+          <td><span class="badge ${s.is_active ? 'badge-green' : 'badge-gray'}">${s.is_active ? '✓ Active' : '✗ Inactive'}</span></td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-toggle" onclick="toggleShop(${s.id}, ${s.is_active})">${s.is_active ? 'Deactivate' : 'Activate'}</button>
+              <button class="btn-del" onclick="confirmDelete('shop', ${s.id}, '${s.shop_name}')">Delete</button>
+            </div>
+          </td>
+        </tr>`).join('');
+    } catch(e) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-table">Error loading shops</td></tr>`;
+    }
+  }
+
+  async function toggleShop(id, currentActive) {
+    try {
+      const res = await fetch(`${API}/api/admin/shops/${id}/toggle`, { method: 'POST' });
+      const data = await res.json();
+      if (data.ok) {
+        showToast(currentActive ? 'Shop deactivate ho gayi' : 'Shop activate ho gayi', 'success');
+        loadShops();
+      }
+    } catch(e) { showToast('Error aaya', 'error'); }
+  }
+
+  // ── Requests ──────────────────────────────────────────────
+  async function loadRequests() {
+    const tbody = document.getElementById('reqsBody');
+    tbody.innerHTML = `<tr><td colspan="7" class="loading-row">Loading...</td></tr>`;
+    try {
+      const res = await apiFetch('/api/admin/requests');
+      const reqs = res.data?.requests || [];
+      document.getElementById('reqsCountTitle').textContent = `Requests (${reqs.length})`;
+
+      if (!reqs.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty-table">Koi request nahi</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = reqs.map(r => `
+        <tr id="req-row-${r.id}">
+          <td><span style="color:var(--muted);font-size:12px;">#${r.id}</span></td>
+          <td><strong>${r.item_name}</strong></td>
+          <td>${r.city || '—'}</td>
+          <td style="font-size:13px;">${r.user_phone || '—'}</td>
+          <td><span class="badge ${r.status === 'open' ? 'badge-green' : 'badge-gray'}">${r.status}</span></td>
+          <td style="font-size:12px;color:var(--muted);">${r.created_at?.slice(0,10) || '—'}</td>
+          <td>
+            <button class="btn-del" onclick="confirmDelete('request', ${r.id}, '${r.item_name}')">Delete</button>
+          </td>
+        </tr>`).join('');
+    } catch(e) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-table">Error loading requests</td></tr>`;
+    }
+  }
+
+  // ── Delete Modal ──────────────────────────────────────────
+  let pendingDelete = null;
+
+  function confirmDelete(type, id, name) {
+    pendingDelete = { type, id };
+    document.getElementById('modalTitle').textContent = `"${name}" delete karein?`;
+    document.getElementById('modalMsg').textContent = 'Yeh action undo nahi ho sakta.';
+    document.getElementById('modalConfirmBtn').onclick = doDelete;
+    document.getElementById('modalBg').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('modalBg').classList.remove('show');
+    pendingDelete = null;
+  }
+
+  async function doDelete() {
+    if (!pendingDelete) return;
+    const { type, id } = pendingDelete;
+    closeModal();
+    try {
+      const res = await fetch(`${API}/api/admin/${type}s/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.ok) {
+        showToast('Delete ho gaya!', 'success');
+        document.getElementById(`${type}-row-${id}`)?.remove();
+        loadDashboard();
+      } else {
+        showToast(data.error || 'Error aaya', 'error');
+      }
+    } catch(e) { showToast('Server error', 'error'); }
+  }
+
+  // ── Toast ─────────────────────────────────────────────────
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.className = 'toast', 3000);
+  }
+</script>
+
+</body>
+</html>
