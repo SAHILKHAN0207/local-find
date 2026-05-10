@@ -731,13 +731,14 @@
         </div>
       </div>
 
-    </div>
+    </div><!-- /formWrap -->
 
-  </div>
+  </div><!-- /form-panel -->
 
-</div>
+</div><!-- /page-wrap -->
 
 <script>
+  // ─── State ───────────────────────────────────────────────
   let selectedCat = '';
   let backupOn    = false;
   let currentStep = 1;
@@ -787,9 +788,11 @@
         distSel.appendChild(opt);
       });
     }
+    // Clear error if state selected
     setError('field-state', false);
   }
 
+  // ─── Category Select ──────────────────────────────────────
   function selectCat(el, cat) {
     document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
@@ -797,12 +800,14 @@
     document.getElementById('field-category').classList.remove('has-error');
   }
 
+  // ─── Backup Toggle ────────────────────────────────────────
   function toggleBackup() {
     backupOn = !backupOn;
     document.getElementById('backupToggle').classList.toggle('on', backupOn);
     document.getElementById('backupField').classList.toggle('show', backupOn);
   }
 
+  // ─── Step Navigation ──────────────────────────────────────
   function setPill(step) {
     for (let i = 1; i <= 3; i++) {
       const p = document.getElementById('pill' + i);
@@ -821,6 +826,7 @@
     window.scrollTo(0, 0);
   }
 
+  // ─── Validation ───────────────────────────────────────────
   function setError(fieldId, hasError) {
     const f = document.getElementById(fieldId);
     if (f) f.classList.toggle('has-error', hasError);
@@ -876,6 +882,7 @@
     return ok;
   }
 
+  // ─── Submit ───────────────────────────────────────────────
   async function submitForm() {
     if (!validateStep(3)) return;
 
@@ -896,10 +903,13 @@
       wa_primary:  document.getElementById('wa1').value.trim(),
       wa_backup:   backupOn ? (document.getElementById('wa2').value.trim() || null) : null,
       email:       document.getElementById('email').value.trim() || null,
+      password:    'localfind123',
     };
 
+    const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'http://127.0.0.1:5000' : '';
+
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/shops/register', {
+      const res = await fetch(API_BASE + '/api/shops/register', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(data)
@@ -924,6 +934,7 @@
     }
   }
 
+  // ─── Input Filters ────────────────────────────────────────
   ['wa1', 'wa2', 'pincode'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', function() {
