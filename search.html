@@ -529,24 +529,43 @@
     return '🏪';
   }
 
-  function doSearch() {
+function doSearch() {
     searchQuery = document.getElementById('searchInput').value.trim();
     if (!searchQuery) return;
     showLoading();
-   let url = `http://localhost:5000/api/shops/search?q=${encodeURIComponent(searchQuery)}&city=jaipur`;
-    if (activeCat !== 'all') url += `&cat=${encodeURIComponent(activeCat)}`;
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                fetchShops(lat, lng);
+            },
+            () => {
+                // Location nahi mili — city se search karo
+                fetchShops(null, null);
+            }
+        );
+    } else {
+        fetchShops(null, null);
+    }
+}
+
+function fetchShops(lat, lng) {
+    let url = `/api/shops/search?q=${encodeURIComponent(searchQuery)}&city=jaipur&radius=10`;
+    if (lat && lng) url += `&lat=${lat}&lng=${lng}`;
 
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        if (data.ok && data.data && data.data.shops && data.data.shops.length > 0) {
+        if (data.ok && data.data.shops.length > 0) {
           renderShops(data.data.shops);
         } else {
           renderEmpty();
         }
       })
       .catch(() => renderEmpty());
-  }
+}
 
   function showLoading() {
     document.getElementById('emptyState').style.display = 'none';

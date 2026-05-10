@@ -63,7 +63,6 @@
   }
   .back-link:hover { color: var(--ink); }
 
-  /* LAYOUT */
   .page-wrap {
     display: grid;
     grid-template-columns: 400px 1fr;
@@ -77,7 +76,6 @@
     padding: 48px 40px;
     display: flex;
     flex-direction: column;
-    gap: 0;
   }
 
   .left-badge {
@@ -104,7 +102,7 @@
 
   .left-panel h2 span { color: var(--saffron); }
 
-  .left-panel p {
+  .left-panel > p {
     font-size: 15px;
     color: rgba(255,255,255,0.55);
     line-height: 1.7;
@@ -185,7 +183,6 @@
   /* STEP INDICATOR */
   .steps-indicator {
     display: flex;
-    gap: 0;
     margin-bottom: 40px;
     background: var(--border);
     border-radius: 50px;
@@ -214,10 +211,8 @@
     color: white;
   }
 
-  /* FORM */
-  .form-section {
-    display: none;
-  }
+  /* FORM SECTIONS */
+  .form-section { display: none; }
   .form-section.active {
     display: block;
     animation: fadeIn 0.3s ease;
@@ -242,9 +237,7 @@
     margin-bottom: 24px;
   }
 
-  .field {
-    margin-bottom: 20px;
-  }
+  .field { margin-bottom: 20px; }
 
   label {
     display: block;
@@ -280,7 +273,18 @@
     box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
   }
 
-  input.error { border-color: var(--error); }
+  textarea { resize: vertical; min-height: 90px; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* Error states */
+  .field.has-error input,
+  .field.has-error select,
+  .field.has-error textarea { border-color: var(--error); }
 
   .error-msg {
     font-size: 12px;
@@ -290,39 +294,36 @@
   }
 
   .field.has-error .error-msg { display: block; }
-  .field.has-error input { border-color: var(--error); }
 
-  textarea { resize: vertical; min-height: 90px; }
-
-  .field-row {
+  /* Category chips */
+  .category-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
   }
 
-  /* WhatsApp number special */
-  .wa-field-wrap {
-    position: relative;
-  }
-
-  .wa-prefix {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 15px;
+  .cat-chip {
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
     color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    pointer-events: none;
+    background: white;
   }
 
-  .wa-field-wrap input {
-    padding-left: 56px;
+  .cat-chip:hover { border-color: var(--saffron); color: var(--saffron); }
+  .cat-chip.selected {
+    background: var(--saffron);
+    border-color: var(--saffron);
+    color: white;
+    font-weight: 600;
   }
 
-  /* Backup number toggle */
+  /* Backup toggle */
   .backup-toggle {
     display: flex;
     align-items: center;
@@ -355,19 +356,10 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   }
 
-  .toggle-switch.on {
-    background: var(--saffron);
-  }
+  .toggle-switch.on { background: var(--saffron); }
+  .toggle-switch.on::after { transform: translateX(18px); }
 
-  .toggle-switch.on::after {
-    transform: translateX(18px);
-  }
-
-  .toggle-label {
-    font-size: 14px;
-    color: var(--ink);
-    font-weight: 500;
-  }
+  .toggle-label { font-size: 14px; color: var(--ink); font-weight: 500; }
 
   .backup-note {
     background: rgba(249,115,22,0.06);
@@ -383,33 +375,18 @@
   .backup-field { display: none; }
   .backup-field.show { display: block; }
 
-  /* Categories */
-  .category-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-  .cat-chip {
-    padding: 10px 12px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
+  /* WhatsApp prefix */
+  .wa-field-wrap { position: relative; }
+  .wa-prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
     color: var(--muted);
-    background: white;
+    pointer-events: none;
   }
-
-  .cat-chip:hover { border-color: var(--saffron); color: var(--saffron); }
-  .cat-chip.selected {
-    background: var(--saffron);
-    border-color: var(--saffron);
-    color: white;
-    font-weight: 600;
-  }
+  .wa-field-wrap input { padding-left: 38px; }
 
   /* Buttons */
   .form-actions {
@@ -437,10 +414,8 @@
     box-shadow: 0 4px 14px rgba(249,115,22,0.3);
   }
 
-  .btn-primary:hover {
-    background: var(--saffron-dark);
-    transform: translateY(-1px);
-  }
+  .btn-primary:hover { background: var(--saffron-dark); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
   .btn-secondary {
     background: transparent;
@@ -501,10 +476,7 @@
     line-height: 1.8;
   }
 
-  .success-detail strong {
-    color: var(--ink);
-    font-weight: 600;
-  }
+  .success-detail strong { color: var(--ink); font-weight: 600; }
 
   @media (max-width: 768px) {
     nav { padding: 14px 20px; }
@@ -517,6 +489,7 @@
 </style>
 </head>
 <body>
+
 <nav>
   <a href="index.html" class="logo">Local<span class="logo-dot">Find</span></a>
   <a href="index.html" class="back-link">← Go Back</a>
@@ -527,7 +500,6 @@
   <!-- LEFT PANEL -->
   <div class="left-panel">
     <div class="left-badge">🏪 Shop Owner</div>
-
     <h2>Register Your<br><span>Shop</span></h2>
     <p>Register on LocalFind and receive requests from nearby customers directly on WhatsApp. It's free, forever.</p>
 
@@ -539,7 +511,6 @@
           <span>Only requests from customers near your shop</span>
         </div>
       </div>
-
       <div class="benefit-item">
         <div class="benefit-icon">📱</div>
         <div class="benefit-text">
@@ -547,7 +518,6 @@
           <span>Primary and backup — reply from both. Bot will notify the other instantly</span>
         </div>
       </div>
-
       <div class="benefit-item">
         <div class="benefit-icon">⚡</div>
         <div class="benefit-text">
@@ -555,7 +525,6 @@
           <span>Instant WhatsApp notification when customer sends a request</span>
         </div>
       </div>
-
       <div class="benefit-item">
         <div class="benefit-icon">🔒</div>
         <div class="benefit-text">
@@ -578,7 +547,6 @@
       <div class="success-icon">✅</div>
       <h3>Shop Registered Successfully!</h3>
       <p>Congratulations! Your shop is now registered on LocalFind. Nearby customer requests will come directly to WhatsApp.</p>
-
       <div class="success-detail">
         <strong>What to expect:</strong><br>
         - When customers nearby search for items<br>
@@ -586,7 +554,6 @@
         - First reply gets the order<br>
         - Bot automatically informs the other number
       </div>
-
       <a href="index.html" class="btn btn-primary" style="text-decoration:none;display:inline-block;">🏠 Go to Home</a>
     </div>
 
@@ -597,7 +564,6 @@
         <p>Complete registration in 3 simple steps</p>
       </div>
 
-      <!-- Steps -->
       <div class="steps-indicator">
         <div class="step-pill active" id="pill1">1. Shop Info</div>
         <div class="step-pill" id="pill2">2. Location</div>
@@ -607,21 +573,21 @@
       <!-- STEP 1: Basic Info -->
       <div class="form-section active" id="step1">
         <div class="form-section-title">Basic Shop Information</div>
-        <div class="form-section-sub">Some basic details about your shop</div>
+        <div class="form-section-sub">Kuch basic details apni dukaan ke baare mein</div>
 
         <div class="field" id="field-shopname">
           <label>Shop Name <span class="req">*</span></label>
           <input type="text" id="shopname" placeholder="Like: Sharma Electronics, Gupta Kirana Store">
-          <div class="error-msg">Shop name is required</div>
+          <div class="error-msg">Shop name zaroori hai</div>
         </div>
 
         <div class="field" id="field-owner">
           <label>Owner Name <span class="req">*</span></label>
-          <input type="text" id="owner" placeholder="Enter your name">
-          <div class="error-msg">Owner name is required</div>
+          <input type="text" id="owner" placeholder="Apna naam likhein">
+          <div class="error-msg">Owner name zaroori hai</div>
         </div>
 
-        <div class="field">
+        <div class="field" id="field-category">
           <label>Shop Category <span class="req">*</span></label>
           <div class="category-grid" id="categoryGrid">
             <div class="cat-chip" onclick="selectCat(this, 'electronics')">📱 Electronics</div>
@@ -634,7 +600,7 @@
             <div class="cat-chip" onclick="selectCat(this, 'food')">🍱 Food</div>
             <div class="cat-chip" onclick="selectCat(this, 'other')">🏪 Others</div>
           </div>
-          <div class="error-msg" id="cat-error" style="display:none;color:var(--error);font-size:12px;margin-top:8px;">Please select a category</div>
+          <div class="error-msg" id="cat-error">Category select karein</div>
         </div>
 
         <div class="field">
@@ -650,116 +616,185 @@
       <!-- STEP 2: Location -->
       <div class="form-section" id="step2">
         <div class="form-section-title">Shop Location</div>
-        <div class="form-section-sub">Customers will find your shop from here</div>
+        <div class="form-section-sub">Customers yahan se aapki dukaan dhundhenge</div>
 
         <div class="field" id="field-address">
           <label>Full Address <span class="req">*</span></label>
           <textarea id="address" placeholder="Shop number, street, locality..." style="min-height:80px;"></textarea>
-          <div class="error-msg">Address is required</div>
+          <div class="error-msg">Address zaroori hai</div>
+        </div>
+
+        <div class="field" id="field-state">
+          <label>State <span class="req">*</span></label>
+          <select id="state" onchange="populateDistricts()">
+            <option value="">Select State</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+            <option value="Assam">Assam</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Chattisgarh">Chattisgarh</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+            <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+            <option value="Jharkhand">Jharkhand</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Manipur">Manipur</option>
+            <option value="Meghalaya">Meghalaya</option>
+            <option value="Mizoram">Mizoram</option>
+            <option value="Nagaland">Nagaland</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Sikkim">Sikkim</option>
+            <option value="Tamilnadu">Tamilnadu</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Tripura">Tripura</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="West Bengal">West Bengal</option>
+          </select>
+          <div class="error-msg">State select karein</div>
+        </div>
+
+        <div class="field" id="field-district">
+          <label>District <span class="req">*</span></label>
+          <select id="district">
+            <option value="">Select District</option>
+          </select>
+          <div class="error-msg">District select karein</div>
         </div>
 
         <div class="field-row">
           <div class="field" id="field-area">
             <label>Area / Locality <span class="req">*</span></label>
-            <input type="text" id="area" placeholder="Like: Malviya Nagar, C-Scheme">
-            <div class="error-msg">Area is required</div>
+            <input type="text" id="area" placeholder="Like: Malviya Nagar, Talwandi">
+            <div class="error-msg">Area zaroori hai</div>
           </div>
           <div class="field" id="field-pincode">
             <label>Pincode <span class="req">*</span></label>
-            <input type="text" id="pincode" placeholder="302001" maxlength="6">
-            <div class="error-msg">Pincode is required</div>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>City <span class="req">*</span></label>
-          <select id="city">
-            <option value="jaipur">Jaipur</option>
-            <option value="jodhpur">Jodhpur</option>
-            <option value="udaipur">Udaipur</option>
-            <option value="kota">Kota</option>
-            <option value="ajmer">Ajmer</option>
-            <option value="other">Other City</option>
-          </select>
-        </div>
-
-        <div class="field-row">
-          <div class="field">
-            <label>Opening Time</label>
-            <input type="text" id="open-time" placeholder="Like: 9:00 AM">
-          </div>
-          <div class="field">
-            <label>Closing Time</label>
-            <input type="text" id="close-time" placeholder="Like: 9:00 PM">
+            <input type="text" id="pincode" placeholder="324001" maxlength="6">
+            <div class="error-msg">Valid 6-digit pincode likhein</div>
           </div>
         </div>
 
         <div class="form-actions">
-          <button class="btn btn-secondary" onclick="goStep(1)">← Previous</button>
-          <button class="btn btn-primary" onclick="goStep(3)">Next Step →</button>
+          <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+          <button class="btn btn-primary" onclick="goStep(3)">Next →</button>
         </div>
       </div>
 
       <!-- STEP 3: WhatsApp -->
       <div class="form-section" id="step3">
-        <div class="form-section-title">WhatsApp Numbers</div>
-        <div class="form-section-sub">Requests will come here — add up to 2 numbers</div>
+        <div class="form-section-title">Contact Details</div>
+        <div class="form-section-sub">Customer requests yahaan aayenge</div>
 
         <div class="field" id="field-wa1">
           <label>Primary WhatsApp Number <span class="req">*</span></label>
           <div class="wa-field-wrap">
-            <div class="wa-prefix">📱 +91</div>
-            <input type="tel" id="wa1" placeholder="98XXXXXXXX" maxlength="10">
+            <span class="wa-prefix">+91</span>
+            <input type="tel" id="wa1" placeholder="9876543210" maxlength="10">
           </div>
-          <div class="error-msg">WhatsApp number required (10 digits)</div>
+          <div class="error-msg">Valid 10-digit number likhein</div>
         </div>
 
-        <!-- Backup toggle -->
         <div class="backup-toggle" onclick="toggleBackup()">
           <div class="toggle-switch" id="backupToggle"></div>
-          <div class="toggle-label">Want to add backup number too?</div>
-        </div>
-
-        <div class="backup-note">
-          💡 If primary number replies, bot automatically sends message to backup: <em>"Order reply sent"</em> — prevents duplicate replies.
+          <span class="toggle-label">Backup WhatsApp Number add karein</span>
         </div>
 
         <div class="backup-field" id="backupField">
+          <div class="backup-note">
+            💡 Backup number pe bhi notifications aayenge. Agar ek number se reply nahi hua toh dusra number automatically inform ho jaata hai.
+          </div>
           <div class="field" id="field-wa2">
             <label>Backup WhatsApp Number</label>
             <div class="wa-field-wrap">
-              <div class="wa-prefix">📱 +91</div>
-              <input type="tel" id="wa2" placeholder="98XXXXXXXX" maxlength="10">
+              <span class="wa-prefix">+91</span>
+              <input type="tel" id="wa2" placeholder="9876543210" maxlength="10">
             </div>
-            <div class="error-msg">10 digit number required</div>
+            <div class="error-msg">Valid 10-digit number likhein</div>
           </div>
         </div>
 
-        <div class="field" id="field-email">
-          <label>Email <span class="hint">(Optional — for login)</span></label>
-          <input type="email" id="email" placeholder="shop@example.com">
+        <div class="field">
+          <label>Email <span class="hint">(Optional)</span></label>
+          <input type="email" id="email" placeholder="dukaan@example.com">
         </div>
 
         <div class="form-actions">
-          <button class="btn btn-secondary" onclick="goStep(2)">← Previous</button>
-          <button class="btn btn-primary" onclick="submitForm()">✓ Register Shop</button>
+          <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+          <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">✓ Dukaan Register Karo</button>
         </div>
       </div>
+
     </div>
 
   </div>
+
 </div>
 
 <script>
   let selectedCat = '';
-  let backupOn = false;
+  let backupOn    = false;
   let currentStep = 1;
+
+  // ─── District Data ────────────────────────────────────────
+  const districts = {
+    "Andhra Pradesh": ["ALLURI SITHARAMA RAJU","ANAKAPALLI","ANANTHAPURAMU","ANNAMAYYA","BAPATLA","CHITTOOR","DR. B.R. AMBEDKAR KONASEEMA","ELURU","GUNTUR","KAKINADA","KRISHNA","KURNOOL","NANDYAL","NTR","PALNADU","PARVATHIPURAM MANYAM","PRAKASAM","SRI POTTI SRIRAMULU NELLORE","SRIKAKULAM","TIRUPATI","VISAKHAPATNAM","VIZIANAGARAM","WEST GODAVARI","YSR KADAPA"],
+    "Arunachal Pradesh": ["ANJAW","CHANGLANG","DIBANG VALLEY","EAST KAMENG","EAST SIANG","KAMLE","KRA DAADI","KURUNG KUMEY","LEPA RADA","LOHIT","LONGDING","LOWER DIBANG VALLEY","LOWER SIANG","LOWER SUBANSIRI","NAMSAI","PAKKE KESSANG","PAPUM PARE","SHI YOMI","SIANG","TAWANG","TIRAP","UPPER SIANG","UPPER SUBANSIRI","WEST KAMENG","WEST SIANG"],
+    "Assam": ["BAJALI","BAKSA","BARPETA","BISWANATH","BONGAIGAON","CACHAR","CHARAIDEO","CHIRANG","DARRANG","DHEMAJI","DHUBRI","DIBRUGARH","DIMA HASAO","GOALPARA","GOLAGHAT","HAILAKANDI","HOJAI","JORHAT","KAMRUP","KAMRUP METRO","KARBI ANGLONG","KARIMGANJ","KOKRAJHAR","LAKHIMPUR","MAJULI","MORIGAON","NAGAON","NALBARI","SIVASAGAR","SONITPUR","SOUTH SALMARA-MANKACHAR","TAMULPUR","TINSUKIA","UDALGURI","WEST KARBI ANGLONG"],
+    "Bihar": ["ARARIA","ARWAL","AURANGABAD","BANKA","BEGUSARAI","BHAGALPUR","BHOJPUR","BUXAR","DARBHANGA","EAST CHAMPARAN","GAYA","GOPALGANJ","JAMUI","JEHANABAD","KAIMUR","KATIHAR","KHAGARIA","KISHANGANJ","LAKHISARAI","MADHEPURA","MADHUBANI","MUNGER","MUZAFFARPUR","NALANDA","NAWADA","PATNA","PURNIA","ROHTAS","SAHARSA","SAMASTIPUR","SARAN","SHEIKHPURA","SHEOHAR","SITAMARHI","SIWAN","SUPAUL","VAISHALI","WEST CHAMPARAN"],
+    "Chattisgarh": ["BALOD","BALODA BAZAR","BALRAMPUR","BASTAR","BEMETARA","BIJAPUR","BILASPUR","DANTEWADA","DHAMTARI","DURG","GARIABAND","GAURELA PENDRA MARWAHI","JANJGIR CHAMPA","JASHPUR","KABIRDHAM","KANKER","KHAIRAGARH","KONDAGAON","KORBA","KORIYA","MAHASAMUND","MANENDRAGARH","MOHLA MANPUR","MUNGELI","NARAYANPUR","RAIGARH","RAIPUR","RAJNANDGAON","SAKTI","SARANGARH BILAIGARH","SUKMA","SURAJPUR","SURGUJA"],
+    "Gujarat": ["AHMEDABAD","AMRELI","ANAND","ARAVALLI","BANASKANTHA","BHARUCH","BHAVNAGAR","BOTAD","CHHOTA UDAIPUR","DAHOD","DANG","DEVBHOOMI DWARKA","GANDHINAGAR","GIR SOMNATH","JAMNAGAR","JUNAGADH","KHEDA","KUTCH","MAHISAGAR","MEHSANA","MORBI","NARMADA","NAVSARI","PANCHMAHAL","PATAN","PORBANDAR","RAJKOT","SABARKANTHA","SURAT","SURENDRANAGAR","TAPI","VADODARA","VALSAD"],
+    "Haryana": ["AMBALA","BHIWANI","CHARKHI DADRI","FARIDABAD","FATEHABAD","GURUGRAM","HISAR","JHAJJAR","JIND","KAITHAL","KARNAL","KURUKSHETRA","MAHENDRAGARH","NUH","PALWAL","PANCHKULA","PANIPAT","REWARI","ROHTAK","SIRSA","SONIPAT","YAMUNANAGAR"],
+    "Himachal Pradesh": ["BILASPUR","CHAMBA","HAMIRPUR","KANGRA","KINNAUR","KULLU","LAHAUL SPITI","MANDI","SHIMLA","SIRMAUR","SOLAN","UNA"],
+    "Jammu & Kashmir": ["ANANTNAG","BANDIPORA","BARAMULLA","BUDGAM","DODA","GANDERBAL","JAMMU","KATHUA","KISHTWAR","KULGAM","KUPWARA","POONCH","PULWAMA","RAJOURI","RAMBAN","REASI","SAMBA","SHOPIAN","SRINAGAR","UDHAMPUR"],
+    "Jharkhand": ["BOKARO","CHATRA","DEOGHAR","DHANBAD","DUMKA","EAST SINGHBHUM","GARHWA","GIRIDIH","GODDA","GUMLA","HAZARIBAG","JAMTARA","KHUNTI","KODERMA","LATEHAR","LOHARDAGA","PAKUR","PALAMU","RAMGARH","RANCHI","SAHEBGANJ","SERAIKELA KHARSAWAN","SIMDEGA","WEST SINGHBHUM"],
+    "Karnataka": ["BAGALKOT","BALLARI","BELAGAVI","BENGALURU RURAL","BENGALURU URBAN","BIDAR","CHAMARAJANAGAR","CHIKKABALLAPUR","CHIKKAMAGALURU","CHITRADURGA","DAKSHINA KANNADA","DAVANAGERE","DHARWAD","GADAG","HASSAN","HAVERI","KALABURAGI","KODAGU","KOLAR","KOPPAL","MANDYA","MYSURU","RAICHUR","RAMANAGARA","SHIVAMOGGA","TUMAKURU","UDUPI","UTTARA KANNADA","VIJAYAPURA","YADGIR"],
+    "Kerala": ["ALAPPUZHA","ERNAKULAM","IDUKKI","KANNUR","KASARAGOD","KOLLAM","KOTTAYAM","KOZHIKODE","MALAPPURAM","PALAKKAD","PATHANAMTHITTA","THIRUVANANTHAPURAM","THRISSUR","WAYANAD"],
+    "Madhya Pradesh": ["AGAR MALWA","ALIRAJPUR","ANUPPUR","ASHOKNAGAR","BALAGHAT","BARWANI","BETUL","BHIND","BHOPAL","BURHANPUR","CHHATARPUR","CHHINDWARA","DAMOH","DATIA","DEWAS","DHAR","DINDORI","GUNA","GWALIOR","HARDA","HOSHANGABAD","INDORE","JABALPUR","JHABUA","KATNI","KHANDWA","KHARGONE","MANDLA","MANDSAUR","MORENA","NARSINGHPUR","NEEMUCH","NIWARI","PANNA","RAISEN","RAJGARH","RATLAM","REWA","SAGAR","SATNA","SEHORE","SEONI","SHAHDOL","SHAJAPUR","SHEOPUR","SHIVPURI","SIDHI","SINGRAULI","TIKAMGARH","UJJAIN","UMARIA","VIDISHA"],
+    "Maharashtra": ["AHMEDNAGAR","AKOLA","AMRAVATI","AURANGABAD","BEED","BHANDARA","BULDHANA","CHANDRAPUR","DHULE","GADCHIROLI","GONDIA","HINGOLI","JALGAON","JALNA","KOLHAPUR","LATUR","MUMBAI","NAGPUR","NANDED","NANDURBAR","NASHIK","OSMANABAD","PALGHAR","PARBHANI","PUNE","RAIGAD","RATNAGIRI","SANGLI","SATARA","SINDHUDURG","SOLAPUR","THANE","WARDHA","WASHIM","YAVATMAL"],
+    "Manipur": ["BISHNUPUR","CHANDEL","CHURACHANDPUR","IMPHAL EAST","IMPHAL WEST","JIRIBAM","KAKCHING","KAMJONG","KANGPOKPI","NONEY","PHERZAWL","SENAPATI","TAMENGLONG","TENGNOUPAL","THOUBAL","UKHRUL"],
+    "Meghalaya": ["EAST GARO HILLS","EAST JAINTIA HILLS","EAST KHASI HILLS","EASTERN WEST KHASI HILLS","NORTH GARO HILLS","RI BHOI","SOUTH GARO HILLS","SOUTH WEST GARO HILLS","SOUTH WEST KHASI HILLS","WEST GARO HILLS","WEST JAINTIA HILLS","WEST KHASI HILLS"],
+    "Mizoram": ["AIZAWL","CHAMPHAI","HNAHTHIAL","KHAWZAWL","KOLASIB","LAWNGTLAI","LUNGLEI","MAMIT","SAITUAL","SERCHHIP"],
+    "Nagaland": ["CHUMOUKEDIMA","DIMAPUR","KIPHIRE","KOHIMA","LONGLENG","MOKOKCHUNG","MON","NIULAND","NOKLAK","PEREN","PHEK","SHAMATOR","TSEMINYU","TUENSANG","WOKHA","ZUNHEBOTO"],
+    "Odisha": ["ANGUL","BALANGIR","BALASORE","BARGARH","BHADRAK","BOUDH","CUTTACK","DEOGARH","DHENKANAL","GAJAPATI","GANJAM","JAGATSINGHPUR","JAJPUR","JHARSUGUDA","KALAHANDI","KANDHAMAL","KENDRAPARA","KENDUJHAR","KHORDHA","KORAPUT","MALKANGIRI","MAYURBHANJ","NABARANGPUR","NAYAGARH","NUAPADA","PURI","RAYAGADA","SAMBALPUR","SONEPUR","SUNDARGARH"],
+    "Punjab": ["AMRITSAR","BARNALA","BATHINDA","FARIDKOT","FATEHGARH SAHIB","FAZILKA","FEROZEPUR","GURDASPUR","HOSHIARPUR","JALANDHAR","KAPURTHALA","LUDHIANA","MANSA","MOGA","MOHALI","MUKTSAR","PATHANKOT","PATIALA","RUPNAGAR","SANGRUR","SHAHEED BHAGAT SINGH NAGAR","TARN TARAN"],
+    "Rajasthan": ["AJMER","ALWAR","BANSWARA","BARAN","BARMER","BHARATPUR","BHILWARA","BIKANER","BUNDI","CHITTAURGARH","CHURU","DAUSA","DHAULPUR","DUNGARPUR","GANGANAGAR","HANUMANGARH","JAIPUR","JAISALMER","JALORE","JHALAWAR","JHUNJHUNUN","JODHPUR","KARAULI","KOTA","NAGAUR","PALI","PRATAPGARH","RAJSAMAND","SAWAI MADHOPUR","SIKAR","SIROHI","TONK","UDAIPUR"],
+    "Sikkim": ["EAST SIKKIM","GYALSHING","NAMCHI","NORTH SIKKIM","PAKYONG","SORENG","SOUTH SIKKIM","WEST SIKKIM"],
+    "Tamilnadu": ["ARIYALUR","CHENGALPET","CHENNAI","COIMBATORE","CUDDALORE","DHARMAPURI","DINDIGUL","ERODE","KALLAKURICHI","KANCHEEPURAM","KANYAKUMARI","KARUR","KRISHNAGIRI","MADURAI","MAYILADUTHURAI","NAGAPATTINAM","NAMAKKAL","NILGIRIS","PERAMBALUR","PUDUKKOTTAI","RAMANATHAPURAM","RANIPET","SALEM","SIVAGANGA","TENKASI","THANJAVUR","THENI","THOOTHUKUDI","TIRUCHIRAPPALLI","TIRUNELVELI","TIRUPATHUR","TIRUPPUR","TIRUVALLUR","TIRUVANNAMALAI","TIRUVARUR","VELLORE","VILUPPURAM","VIRUDHUNAGAR"],
+    "Telangana": ["ADILABAD","BHADRADRI KOTHAGUDEM","HYDERABAD","JAGTIAL","JANGAON","JAYASHANKAR BHUPALPALLY","JOGULAMBA GADWAL","KAMAREDDY","KARIMNAGAR","KHAMMAM","KOMARAM BHEEM","MAHABUBABAD","MAHABUBNAGAR","MANCHERIAL","MEDAK","MEDCHAL MALKAJGIRI","MULUGU","NAGARKURNOOL","NALGONDA","NARAYANPET","NIRMAL","NIZAMABAD","PEDDAPALLI","RAJANNA SIRCILLA","RANGAREDDY","SANGAREDDY","SIDDIPET","SURYAPET","VIKARABAD","WANAPARTHY","WARANGAL RURAL","WARANGAL URBAN","YADADRI BHUVANAGIRI"],
+    "Tripura": ["DHALAI","GOMATI","KHOWAI","NORTH TRIPURA","SEPAHIJALA","SIPAHIJALA","SOUTH TRIPURA","UNOKOTI","WEST TRIPURA"],
+    "Uttar Pradesh": ["AGRA","ALIGARH","AMBEDKAR NAGAR","AMETHI","AMROHA","AURAIYA","AYODHYA","AZAMGARH","BAGHPAT","BAHRAICH","BALLIA","BALRAMPUR","BANDA","BARABANKI","BAREILLY","BASTI","BHADOHI","BIJNOR","BUDAUN","BULANDSHAHR","CHANDAULI","CHITRAKOOT","DEORIA","ETAH","ETAWAH","FARRUKHABAD","FATEHPUR","FIROZABAD","GAUTAM BUDDH NAGAR","GHAZIABAD","GHAZIPUR","GONDA","GORAKHPUR","HAMIRPUR","HAPUR","HARDOI","HATHRAS","JALAUN","JAUNPUR","JHANSI","KANNAUJ","KANPUR DEHAT","KANPUR NAGAR","KASGANJ","KAUSHAMBI","KHERI","KUSHINAGAR","LALITPUR","LUCKNOW","MAHARAJGANJ","MAHOBA","MAINPURI","MATHURA","MAU","MEERUT","MIRZAPUR","MORADABAD","MUZAFFARNAGAR","PILIBHIT","PRATAPGARH","PRAYAGRAJ","RAEBARELI","RAMPUR","SAHARANPUR","SAMBHAL","SANT KABIR NAGAR","SHAHJAHANPUR","SHAMLI","SHRAVASTI","SIDDHARTHNAGAR","SITAPUR","SONBHADRA","SULTANPUR","UNNAO","VARANASI"],
+    "Uttarakhand": ["ALMORA","BAGESHWAR","CHAMOLI","CHAMPAWAT","DEHRADUN","HARIDWAR","NAINITAL","PAURI GARHWAL","PITHORAGARH","RUDRAPRAYAG","TEHRI GARHWAL","UDHAM SINGH NAGAR","UTTARKASHI"],
+    "West Bengal": ["ALIPURDUAR","BANKURA","BIRBHUM","COOCH BEHAR","DAKSHIN DINAJPUR","DARJEELING","HOOGHLY","HOWRAH","JALPAIGURI","JHARGRAM","KALIMPONG","KOLKATA","MALDA","MURSHIDABAD","NADIA","NORTH 24 PARGANAS","PASCHIM BARDHAMAN","PASCHIM MEDINIPUR","PURBA BARDHAMAN","PURBA MEDINIPUR","PURULIA","SOUTH 24 PARGANAS","UTTAR DINAJPUR"]
+  };
+
+  // ─── Populate Districts ────────────────────────────────────
+  function populateDistricts() {
+    const state    = document.getElementById('state').value;
+    const distSel  = document.getElementById('district');
+    distSel.innerHTML = '<option value="">Select District</option>';
+    if (districts[state]) {
+      districts[state].sort().forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.text  = d;
+        distSel.appendChild(opt);
+      });
+    }
+    setError('field-state', false);
+  }
 
   function selectCat(el, cat) {
     document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
     selectedCat = cat;
-    document.getElementById('cat-error').style.display = 'none';
+    document.getElementById('field-category').classList.remove('has-error');
   }
 
   function toggleBackup() {
@@ -772,15 +807,13 @@
     for (let i = 1; i <= 3; i++) {
       const p = document.getElementById('pill' + i);
       p.className = 'step-pill';
-      if (i < step) p.classList.add('done');
+      if (i < step)      p.classList.add('done');
       else if (i === step) p.classList.add('active');
     }
   }
 
   function goStep(n) {
-    if (n > currentStep) {
-      if (!validateStep(currentStep)) return;
-    }
+    if (n > currentStep && !validateStep(currentStep)) return;
     document.getElementById('step' + currentStep).classList.remove('active');
     currentStep = n;
     document.getElementById('step' + n).classList.add('active');
@@ -788,42 +821,52 @@
     window.scrollTo(0, 0);
   }
 
+  function setError(fieldId, hasError) {
+    const f = document.getElementById(fieldId);
+    if (f) f.classList.toggle('has-error', hasError);
+  }
+
   function validateStep(step) {
     let ok = true;
 
     if (step === 1) {
       const shopname = document.getElementById('shopname').value.trim();
-      const owner = document.getElementById('owner').value.trim();
+      const owner    = document.getElementById('owner').value.trim();
 
       setError('field-shopname', !shopname);
       setError('field-owner', !owner);
+
       if (!selectedCat) {
-        document.getElementById('cat-error').style.display = 'block';
+        document.getElementById('field-category').classList.add('has-error');
         ok = false;
       }
       if (!shopname || !owner) ok = false;
     }
 
     if (step === 2) {
-      const address = document.getElementById('address').value.trim();
-      const area = document.getElementById('area').value.trim();
-      const pincode = document.getElementById('pincode').value.trim();
+      const address  = document.getElementById('address').value.trim();
+      const state    = document.getElementById('state').value;
+      const district = document.getElementById('district').value;
+      const area     = document.getElementById('area').value.trim();
+      const pincode  = document.getElementById('pincode').value.trim();
 
-      setError('field-address', !address);
-      setError('field-area', !area);
-      setError('field-pincode', !pincode || pincode.length !== 6);
-      if (!address || !area || !pincode || pincode.length !== 6) ok = false;
+      setError('field-address',  !address);
+      setError('field-state',    !state);
+      setError('field-district', !district);
+      setError('field-area',     !area);
+      setError('field-pincode',  !pincode || pincode.length !== 6);
+
+      if (!address || !state || !district || !area || !pincode || pincode.length !== 6) ok = false;
     }
 
     if (step === 3) {
-      const wa1 = document.getElementById('wa1').value.trim();
-      const wa2 = document.getElementById('wa2').value.trim();
-
-      const wa1ok = wa1.length === 10 && /^\d+$/.test(wa1);
+      const wa1    = document.getElementById('wa1').value.trim();
+      const wa1ok  = wa1.length === 10 && /^\d+$/.test(wa1);
       setError('field-wa1', !wa1ok);
       if (!wa1ok) ok = false;
 
-      if (backupOn && wa2) {
+      if (backupOn) {
+        const wa2   = document.getElementById('wa2').value.trim();
         const wa2ok = wa2.length === 10 && /^\d+$/.test(wa2);
         setError('field-wa2', !wa2ok);
         if (!wa2ok) ok = false;
@@ -833,16 +876,10 @@
     return ok;
   }
 
-  function setError(fieldId, hasError) {
-    const f = document.getElementById(fieldId);
-    if (!f) return;
-    f.classList.toggle('has-error', hasError);
-  }
-
   async function submitForm() {
     if (!validateStep(3)) return;
 
-    const btn = event.target;
+    const btn = document.getElementById('submitBtn');
     btn.textContent = 'Register ho raha hai...';
     btn.disabled = true;
 
@@ -852,52 +889,46 @@
       category:    selectedCat,
       description: document.getElementById('description').value.trim(),
       address:     document.getElementById('address').value.trim(),
+      state:       document.getElementById('state').value,
+      district:    document.getElementById('district').value,
       area:        document.getElementById('area').value.trim(),
-      city:        document.getElementById('city').value,
       pincode:     document.getElementById('pincode').value.trim(),
       wa_primary:  document.getElementById('wa1').value.trim(),
-      wa_backup:   document.getElementById('wa2').value.trim() || null,
+      wa_backup:   backupOn ? (document.getElementById('wa2').value.trim() || null) : null,
       email:       document.getElementById('email').value.trim() || null,
-      password:    'localfind123',
-      latitude:    26.9124,
-      longitude:   75.7873,
     };
 
     try {
       const res = await fetch('http://127.0.0.1:5000/api/shops/register', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body:    JSON.stringify(data)
       });
 
       const result = await res.json();
 
       if (result.ok) {
         localStorage.setItem('shop_token', result.data.token);
-        localStorage.setItem('shop_id', result.data.shop_id);
-        document.getElementById('formWrap').style.display = 'none';
+        localStorage.setItem('shop_id',    result.data.shop_id);
+        document.getElementById('formWrap').style.display    = 'none';
         document.getElementById('successScreen').classList.add('show');
       } else {
         btn.textContent = '✓ Dukaan Register Karo';
-        btn.disabled = false;
+        btn.disabled    = false;
         alert('Error: ' + (result.error || JSON.stringify(result.details)));
       }
     } catch (err) {
       btn.textContent = '✓ Dukaan Register Karo';
-      btn.disabled = false;
-      alert('Server se connection nahi ho paya!');
+      btn.disabled    = false;
+      alert('Server se connection nahi ho paya! Kripya baad mein try karein.');
     }
   }
 
-  // Only numeric input for phone fields
-  document.getElementById('wa1').addEventListener('input', function() {
-    this.value = this.value.replace(/\D/g, '');
-  });
-  document.getElementById('wa2').addEventListener('input', function() {
-    this.value = this.value.replace(/\D/g, '');
-  });
-  document.getElementById('pincode').addEventListener('input', function() {
-    this.value = this.value.replace(/\D/g, '');
+  ['wa1', 'wa2', 'pincode'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+    });
   });
 </script>
 
